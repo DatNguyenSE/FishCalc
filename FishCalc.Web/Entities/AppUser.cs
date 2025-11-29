@@ -1,7 +1,7 @@
 using System;
 using Microsoft.AspNetCore.Identity;
 
-namespace FishCalc.Web.Data;
+namespace FishCalc.Web.Entities;
 
 public class AppUser : IdentityUser
 {
