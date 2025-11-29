@@ -1,10 +1,74 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    // Loại bỏ toàn bộ <script src="https://cdn.tailwindcss.com"></script>
+    // Loại bỏ toàn bộ <div class="min-h-screen bg-gray-50 relative overflow-x-hidden font-sans text-slate-800">
+    // Loại bỏ toàn bộ Sidebar và Nút Toggle
+    
+    // Đặt tên trang cho _Layout.cshtml
+    ViewData["Title"] = "Trang chủ"; 
+    
+    // Nếu bạn đã đặt Layout trong Views/_ViewImports.cshtml, không cần dòng này.
+    // Nếu chưa, hãy đảm bảo Layout được set nếu bạn đã xóa Layout mặc định ở nơi khác.
+    // Layout = "_Layout"; 
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<!-- Nội dung này sẽ được RenderBody() trong _Layout.cshtml hiển thị -->
+
+<!-- Header -->
+<div class="mb-8 flex justify-between items-end">
+    <div>
+        <h1 class="text-2xl font-bold text-slate-800">Dashboard</h1>
+        <p class="mt-1 text-slate-500 text-sm">Xin chào, đây là tổng quan tình hình hôm nay.</p>
+    </div>
+    <div class="text-sm text-slate-400">
+        @DateTime.Now.ToString("dd/MM/yyyy")
+    </div>
+</div>
+
+<!-- Khu vực Thống kê nhanh -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+    
+    <!-- Card Thống kê 1 -->
+    <div class="bg-white p-6 rounded-lg shadow-sm border border-slate-200 flex flex-col justify-between h-32 hover:shadow-md transition-shadow">
+        <div>
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Tổng Loại Cá</p>
+            <p class="text-3xl font-bold text-slate-800 mt-1">@Model.TotalFishTypesCount</p>
+        </div>
+        <div class="self-end text-slate-300 text-3xl">🐟</div>
+    </div>
+
+    <!-- Card Thống kê 2 -->
+    <div class="bg-white p-6 rounded-lg shadow-sm border border-slate-200 flex flex-col justify-between h-32 hover:shadow-md transition-shadow">
+        <div>
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Cá Nhập Hôm Nay</p>
+            <div class="flex items-end gap-2">
+                 <p class="text-3xl font-bold text-slate-800 mt-1">2,350</p>
+                 <span class="text-sm text-slate-500 mb-1">kg</span>
+            </div>
+        </div>
+        <div class="self-end text-emerald-200 text-3xl">⚖️</div>
+    </div>
+
+    <!-- Card Thống kê 3 -->
+    <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-red-400 flex flex-col justify-between h-32 hover:shadow-md transition-shadow">
+        <div>
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-wide">Lương Cần Trả</p>
+            <div class="flex items-end gap-2">
+                <p class="text-3xl font-bold text-red-600 mt-1">2.5M</p>
+                <span class="text-sm text-red-400 mb-1">VNĐ</span>
+            </div>
+        </div>
+        <div class="self-end text-red-200 text-3xl">⚠️</div>
+    </div>
+    
+</div>
+
+<!-- Khu vực Biểu đồ / Nội dung chính -->
+<div class="bg-white rounded-lg shadow-sm border border-slate-200 p-6 h-96 flex flex-col items-center justify-center text-slate-400">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mb-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+    </svg>
+    <p>Khu vực hiển thị biểu đồ và báo cáo chi tiết</p>
+    <p class="text-sm mt-2">(Chức năng đang phát triển)</p>
 </div>

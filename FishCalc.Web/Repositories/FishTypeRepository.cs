@@ -9,19 +9,20 @@ namespace FishCalc.Web.Repositories;
 
 public class FishTypeRepository(AppDbContext context) : IFishTypeRepository
 {
-    public async Task Create(FishType fish)
+    public void Create(FishType fish)
     {
         context.FishTypes.Add(fish);
     }
 
-    public async Task Delete(FishType fish)
+    public void  Delete(FishType fish)
     {
-        context.FishTypes.Remove(fish);
+       context.FishTypes.Remove(fish);
     }
 
-    public async Task<FishType?> GetFishForUpdate(int id)
+    public async Task<FishType?> GetFishTypeByIdAsync(int id)
     {
-       return context.FishTypes.SingleOrDefault(x => x.Id == id);
+       return await context.FishTypes
+            .SingleOrDefaultAsync(x => x.Id == id);
     }
 
     public async Task<IReadOnlyList<FishType>> GetFishTypesAsync()
@@ -29,7 +30,7 @@ public class FishTypeRepository(AppDbContext context) : IFishTypeRepository
         return await context.FishTypes.ToListAsync();
     }
 
-    public async Task Update(FishType fish)
+    public void Update(FishType fish)
     {
         context.Entry(fish).State = EntityState.Modified;
     }

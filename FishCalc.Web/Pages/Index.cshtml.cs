@@ -1,19 +1,17 @@
+using System.Threading.Tasks;
+using FishCalc.Web.Entities;
+using FishCalc.Web.Interfaces.IServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FishCalc.Web.Pages;
 
-public class IndexModel : PageModel
+public class IndexModel(IFishTypeService _fishTypeService,ILogger<IndexModel> _logger) : PageModel
 {
-    private readonly ILogger<IndexModel> _logger;
-
-    public IndexModel(ILogger<IndexModel> logger)
+    public int TotalFishTypesCount { get; set; }
+    public async Task OnGet()
     {
-        _logger = logger;
-    }
-
-    public void OnGet()
-    {
-
+        var fishTypes = await _fishTypeService.GetAllFishTypesAsync();
+        TotalFishTypesCount = fishTypes.Count;
     }
 }

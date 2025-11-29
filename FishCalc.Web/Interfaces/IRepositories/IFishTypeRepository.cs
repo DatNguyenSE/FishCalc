@@ -5,11 +5,11 @@ namespace FishCalc.Web.Interfaces;
 
 public interface IFishTypeRepository
 {
-    Task Update(FishType fish);
-    Task Create(FishType fish);
+    void Create(FishType fish);
+    void Update(FishType fish);
+    void Delete(FishType fish);
     Task<IReadOnlyList<FishType>> GetFishTypesAsync();
-    Task Delete(FishType fish);
-    Task<FishType?> GetFishForUpdate(int id);
+    Task<FishType?> GetFishTypeByIdAsync(int id);
 
 
 }

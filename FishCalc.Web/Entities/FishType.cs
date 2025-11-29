@@ -14,7 +14,7 @@ public class FishType
 
 
     // -----------Nav property
-    public FishPrice FishPrice {get;set;} =null!;
+    public FishPrice? FishPrice {get;set;} =null!;
 
 }
 
