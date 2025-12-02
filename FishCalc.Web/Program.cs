@@ -12,6 +12,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<IFishTypeRepository, FishTypeRepository>();
 builder.Services.AddScoped<IFishTypeService, FishTypeService>();
+builder.Services.AddScoped<IProcessingUnitRepository, ProcessingUnitRepository>();
+builder.Services.AddScoped<IProcessingUnitService, ProcessingUnitService>();
+
 builder.Services.AddDbContext<AppDbContext>(opt =>
 {
    opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
