@@ -9,29 +9,40 @@ namespace FishCalc.Web.Repositories;
 
 public class FishTypeRepository(AppDbContext context) : IFishTypeRepository
 {
-    public void Create(FishType fish)
+    public async Task Create(FishType fish)
     {
         context.FishTypes.Add(fish);
+        await context.SaveChangesAsync();
+
     }
 
-    public void  Delete(FishType fish)
+    public async Task  Delete(FishType fish)
     {
        context.FishTypes.Remove(fish);
+        await context.SaveChangesAsync();
+
     }
 
     public async Task<FishType?> GetFishTypeByIdAsync(int id)
     {
-       return await context.FishTypes
+       return await context.FishTypes.Include(x => x.FishPrice)
             .SingleOrDefaultAsync(x => x.Id == id);
     }
 
     public async Task<IReadOnlyList<FishType>> GetFishTypesAsync()
     {
-        return await context.FishTypes.ToListAsync();
+        return await context.FishTypes.Include(x => x.FishPrice).ToListAsync();
     }
 
-    public void Update(FishType fish)
+    public async Task<IReadOnlyList<FishType>> GetListFishTypeByIdAsync(List<int> ids)
+    {
+        return await context.FishTypes.Include(x => x.FishPrice).Where(x => ids.Contains(x.Id)).ToListAsync();
+           
+    }
+
+    public async Task UpdateAsync(FishType fish)
     {
         context.Entry(fish).State = EntityState.Modified;
+        await context.SaveChangesAsync();
     }
 }

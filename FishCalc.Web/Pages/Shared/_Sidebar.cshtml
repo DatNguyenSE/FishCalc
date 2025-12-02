@@ -1,21 +1,23 @@
 ﻿<!-- 1. BUTTON TOGGLE (Nút Bật/Tắt) -->
-<button onclick="toggleSidebar()" 
-        class="fixed top-4 left-4 z-50 p-2 bg-slate-800 text-white rounded-lg shadow-md hover:bg-slate-700 focus:outline-none transition-all duration-300"
-        id="sidebarToggleBtn">
+<button onclick="toggleSidebar()"
+    class="fixed top-4 left-4 z-50 p-2 bg-slate-800 text-white rounded-lg shadow-md hover:bg-slate-700 focus:outline-none transition-all duration-300"
+    id="sidebarToggleBtn">
     <!-- Icon Menu (Hiện khi sidebar đóng) -->
-    <svg id="icon-menu" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <svg id="icon-menu" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24"
+        stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
     </svg>
     <!-- Icon Close (Hiện khi sidebar mở) -->
-    <svg id="icon-close" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <svg id="icon-close" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+        stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
     </svg>
 </button>
 
 <!-- 2. SIDEBAR CONTENT -->
-<aside id="sidebar" 
-       class="fixed left-0 top-0 h-full w-64 bg-slate-800 text-slate-100 shadow-xl flex flex-col z-40 transition-transform duration-300 transform translate-x-0">
-    
+<aside id="sidebar"
+    class="fixed left-0 top-0 h-full w-64 bg-slate-800 text-slate-100 shadow-xl flex flex-col z-40 transition-transform duration-300 transform translate-x-0">
+
     <div class="p-6 text-center border-b border-slate-700 mt-12">
         <h2 class="text-2xl font-bold tracking-wider">FishCalc</h2>
         <p class="text-xs text-slate-400 mt-1">Quản Lý Lương Công Nhân</p>
@@ -24,33 +26,38 @@
     <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
         <h3 class="text-xs font-semibold uppercase text-slate-400 pt-2 pb-1 ml-2">Chức Năng Chính</h3>
 
-        <a asp-page="/Index" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-slate-700 hover:text-white text-slate-300 transition duration-200">
+        <a asp-page="/Index"
+            class="flex items-center space-x-3 p-3 rounded-lg hover:bg-slate-700 hover:text-white text-slate-300 transition duration-200">
             <span class="text-lg">📊</span>
             <span>Tổng quan</span>
         </a>
 
-        <a asp-page="/FishTypes" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-slate-700 hover:text-white text-slate-300 transition duration-200">
+        <a asp-page="/FishTypes"
+            class="flex items-center space-x-3 p-3 rounded-lg hover:bg-slate-700 hover:text-white text-slate-300 transition duration-200">
             <span class="text-lg">🐟</span>
             <span>Loại Cá & Giá</span>
         </a>
 
-        <a asp-page="/Payments/LabourSchedule" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-slate-700 hover:text-white text-slate-300 transition duration-200">
+        <a asp-page="/Features/ProcessingSetupModel"
+            class="flex items-center space-x-3 p-3 rounded-lg hover:bg-slate-700 hover:text-white text-slate-300 transition duration-200">
             <span class="text-lg">💵</span>
             <span>Tính Lương</span>
         </a>
 
-        <a asp-page="/Receipts/Index" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-slate-700 hover:text-white text-slate-300 transition duration-200">
+        <a asp-page="/Receipts/Index"
+            class="flex items-center space-x-3 p-3 rounded-lg hover:bg-slate-700 hover:text-white text-slate-300 transition duration-200">
             <span class="text-lg">📦</span>
             <span>Biên lai</span>
         </a>
-        
-            <h3 class="text-xs font-semibold uppercase text-slate-400 pt-6 pb-1 ml-2">Đơn vị</h3>
-        <a asp-page="/Units/Index" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-slate-700 hover:text-white text-slate-300 transition duration-200">
+
+        <h3 class="text-xs font-semibold uppercase text-slate-400 pt-6 pb-1 ml-2">Đơn vị</h3>
+        <a asp-page="/Units/Index"
+            class="flex items-center space-x-3 p-3 rounded-lg hover:bg-slate-700 hover:text-white text-slate-300 transition duration-200">
             <span class="text-lg">👩‍🌾</span>
             <span>các tổ & cá nhân</span>
         </a>
     </nav>
-    
+
     <div class="mt-auto p-4 border-t border-slate-700">
         <p class="text-xs text-slate-500 text-center">© 2025 FishCalc Web</p>
     </div>
@@ -63,19 +70,19 @@
         const mainContent = document.getElementById('main-content'); // ID này sẽ nằm ở Layout
         const iconMenu = document.getElementById('icon-menu');
         const iconClose = document.getElementById('icon-close');
-        
+
         const isClosed = sidebar.classList.contains('-translate-x-full');
 
         if (isClosed) {
             // MỞ
             sidebar.classList.remove('-translate-x-full');
-            if(mainContent) mainContent.classList.add('ml-64');
+            if (mainContent) mainContent.classList.add('ml-64');
             iconMenu.classList.add('hidden');
             iconClose.classList.remove('hidden');
         } else {
             // ĐÓNG
             sidebar.classList.add('-translate-x-full');
-            if(mainContent) mainContent.classList.remove('ml-64');
+            if (mainContent) mainContent.classList.remove('ml-64');
             iconMenu.classList.remove('hidden');
             iconClose.classList.add('hidden');
         }

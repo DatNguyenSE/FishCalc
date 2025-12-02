@@ -4,14 +4,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FishCalc.Web.Entities;
 
-public class SalaryPayment
+public class SalaryProcess
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int PaymentId { get; set; }
+    public int SalaryProcessId { get; set; }
 
     [Required]
-    public DateTime PaymentDate { get; set; }
+    public DateTime Date { get; set; }
 
     [Required]
     public int FishId { get; set; }

@@ -12,9 +12,7 @@ using FishCalc.Web.Mapping;
 namespace FishCalc.Web.Services;
 
 // Bỏ IMapper ra khỏi constructor
-public class FishTypeService(
-    IFishTypeRepository _fishTypeRepository, 
-    AppDbContext _context) : IFishTypeService
+public class FishTypeService(IFishTypeRepository _fishTypeRepository) : IFishTypeService
 {
     public async Task<IReadOnlyList<FishTypeDto>> GetAllFishTypesAsync()
     {
@@ -31,35 +29,31 @@ public class FishTypeService(
 
         return entity.ToDto();
     }
+    public async Task<IReadOnlyList<FishTypeDto?>> GetListFishTypeByIdAsync(List<int> ids)
+    {
+        var entities =await _fishTypeRepository.GetListFishTypeByIdAsync(ids);
+        
+        if (entities == null) return null;
+
+        return entities.Select(e => e.ToDto()).ToList();
+ 
+    }
     
 
     public async Task CreateFishTypeAsync(FishTypeDto dto)
     {
         var entity = dto.ToEntity();
 
-        _fishTypeRepository.Create(entity);
-
-        await _context.SaveChangesAsync();
-        
+        await _fishTypeRepository.Create(entity);
     }
 
     public async Task UpdateFishTypeAsync(FishTypeDto dto)
     {
-        var existingEntity = await _fishTypeRepository.GetFishTypeByIdAsync(dto.Id);
+        var entiy = dto.ToEntity();
 
-        if (existingEntity == null) 
-        {
-            throw new Exception($"Không tìm thấy loại cá có ID: {dto.Id}");
-        }
+        await _fishTypeRepository.UpdateAsync(entiy); 
 
-      
-        existingEntity.MapToEntity(dto); 
-
-        _fishTypeRepository.Update(existingEntity); 
-
-        await _context.SaveChangesAsync();
     }
-
     public async Task DeleteFishTypeAsync(int id)
     {
         var entityToDelete = await _fishTypeRepository.GetFishTypeByIdAsync(id);
@@ -69,8 +63,9 @@ public class FishTypeService(
             return; 
         }
 
-        _fishTypeRepository.Delete(entityToDelete);
+        await _fishTypeRepository.Delete(entityToDelete);
 
-        await _context.SaveChangesAsync();
     }
+
+    
 }

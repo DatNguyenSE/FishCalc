@@ -9,6 +9,7 @@ public interface IFishTypeService
     // Queries
     Task<IReadOnlyList<FishTypeDto>> GetAllFishTypesAsync();
     Task<FishTypeDto?> GetFishTypeByIdAsync(int id); 
+    Task<IReadOnlyList<FishTypeDto>> GetListFishTypeByIdAsync(List<int> ids);
 
     // Commands
     Task CreateFishTypeAsync(FishTypeDto dto);

@@ -1,0 +1,253 @@
+﻿@page
+@model FishCalc.Web.Pages.Features.SalaryProcessModel
+@using System.Globalization
+
+@{
+ViewData["Title"] = "Phân Bổ Lương";
+var culture = new CultureInfo("vi-VN");
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/airbnb.css">
+
+<div class="container mx-auto px-4 py-6 max-w-full">
+
+    <form method="post" asp-page-handler="ProcessData">
+
+        <div
+            class="flex flex-col md:flex-row justify-between items-end md:items-center mb-6 bg-white p-6 rounded-xl shadow-sm border border-gray-100 gap-4">
+
+            <div>
+                <h2 class="text-2xl font-bold text-slate-700">Bảng nhập liệu tính toán</h2>
+                <div class="flex items-center gap-2 mt-1">
+                    <span class="text-slate-500 text-sm">Nhập khối lượng (kg) cho từng Tổ theo Loại cá.</span>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3 bg-slate-50 p-2 rounded-lg border border-slate-200">
+                <label for="processDate" class="text-sm  font-semibold text-slate-600 pl-2 whitespace-nowrap">
+                    <div class="text-red-500">Ngày thực hiện: </div>
+                </label>
+
+                <input type="text" asp-for="ProcessDate" value="@Model.ProcessDate.ToString(" yyyy-MM-dd")"
+                    class="date-picker bg-white border border-gray-300 text-slate-700 text-sm rounded-md focus:ring-sky-500 focus:border-sky-500 block w-40 p-2.5 shadow-sm font-medium text-center cursor-pointer"
+                    placeholder="Chọn ngày..." required />
+            </div>
+        </div>
+
+        <div class="bg-white border border-gray-100 shadow-lg rounded-xl mt-6">
+
+            <div class="overflow-x-auto">
+                <table class="min-w-full border-collapse">
+
+                    <thead class="bg-slate-50 text-slate-600 sticky top-0 z-20 shadow-sm">
+                        <tr>
+                            <th
+                                class="sticky left-0 top-0 z-30 bg-slate-100 px-3 py-2 text-left text-xs font-bold uppercase tracking-wider border-b border-r border-gray-200 w-40 min-w-[160px]">
+                                Loại Cá \ Tổ
+                            </th>
+                            @foreach (var unit in Model.SelectedProcessingUnits)
+                            {
+                            <th
+                                class="px-2 py-2 text-center text-[11px] font-bold uppercase tracking-wider border-b border-gray-200 min-w-[100px]">
+                                <div class="text-slate-700">@unit.UnitName</div>
+                                <div class="text-[9px] text-gray-400 font-normal">ID: @unit.UnitId</div>
+                            </th>
+                            }
+                        </tr>
+                    </thead>
+
+                    <tbody class="divide-y divide-gray-100 bg-white">
+                        @foreach (var fish in Model.SelectedFishTypes)
+                        {
+                        <tr class="group hover:bg-slate-50 transition-colors duration-150">
+
+                            <td
+                                class="sticky left-0 z-10 bg-white group-hover:bg-slate-50 px-3 py-2 border-r border-gray-100 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.06)]">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <div class="font-semibold text-slate-700 text-xs">@fish.Name</div>
+                                        <div class="text-[10px] text-slate-400">@fish.PricePerUnitOfMeasure.ToString("#,##0", culture) /kg</div>
+                                    </div>
+                                </div>
+                            </td>
+
+                            @foreach (var unit in Model.SelectedProcessingUnits)
+                            {
+                            var inputName = $"Data[{unit.UnitId}][{fish.Id}]";
+                            <td class="p-0.5 relative align-top border-r border-dashed border-gray-100">
+                                <div class="relative">
+                                    <input type="number" name="@inputName"
+                                        class="salary-input w-full text-right font-mono text-xs py-1.5 px-2 bg-transparent border border-transparent rounded hover:bg-white hover:border-gray-300 focus:bg-white focus:border-sky-500 focus:ring-1 focus:ring-sky-100 transition-all placeholder-gray-300"
+                                        placeholder="0" min="0" step="0.01" data-price="@fish.PricePerUnitOfMeasure"
+                                        data-unit-id="@unit.UnitId" />
+                                    <div
+                                        class="cell-total h-3 text-[9px] text-right text-gray-400 px-2 font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+                                    </div>
+                                </div>
+                            </td>
+                            }
+                        </tr>
+                        }
+                    </tbody>
+
+                    <tfoot
+                        class="bg-slate-50 sticky bottom-0 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] border-t border-gray-200">
+                        <tr>
+                            <td
+                                class="sticky left-0 z-30 bg-slate-100 px-3 py-2 text-right text-xs font-bold text-slate-700 border-r border-gray-200">
+                                TỔNG:
+                            </td>
+                            @foreach (var unit in Model.SelectedProcessingUnits)
+                            {
+                            <td class="px-2 py-2 text-right">
+                                <div class="font-bold text-sky-700 text-xs" id="total-unit-@unit.UnitId">0 ₫</div>
+                            </td>
+                            }
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+        <div
+            class="mt-8 flex flex-col md:flex-row justify-between items-center gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+
+            <div class="flex items-center gap-3">
+                <div>
+                    <p class="text-xs font-bold text-slate-500 uppercase tracking-wide">Tổng chi phí cho các tổ</p>
+                    <p id="grand-total" class="text-xs font-extrabold text-emerald-700 leading-none mt-1">0 ₫</p>
+                </div>
+            </div>
+
+            <button type="submit"
+                class="w-full md:w-auto bg-sky-600 hover:bg-sky-700 text-white font-semibold py-3 px-8 rounded-lg shadow-lg shadow-sky-500/20 flex items-center justify-center gap-2 transition hover:-translate-y-0.5 active:translate-y-0">
+                <span>Lưu & Tính Lương</span>
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://npmcdn.com/flatpickr/dist/l10n/vn.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // --- 0. BIẾN CỜ ĐỂ XÁC ĐỊNH TRẠNG THÁI SUBMIT ---
+        let isSubmitting = false;
+
+        // --- 1. CẤU HÌNH LỊCH FLATPICKR ---
+        flatpickr(".date-picker", {
+            locale: "vn",
+            dateFormat: "Y-m-d",
+            altInput: true,
+            altFormat: "d/m/Y",
+            allowInput: true,
+            defaultDate: "today"
+        });
+
+        // --- 2. CẤU HÌNH TÍNH TOÁN ---
+        const moneyFormatter = new Intl.NumberFormat('vi-VN', {
+            style: 'decimal',
+            maximumFractionDigits: 0
+        });
+
+        const inputs = document.querySelectorAll('.salary-input');
+        const grandTotalElement = document.getElementById('grand-total');
+        const submitButton = document.querySelector('button[type="submit"]'); // Lấy nút submit
+
+        const unitTotalElements = {};
+        document.querySelectorAll('[id^="total-unit-"]').forEach(el => {
+            unitTotalElements[el.id.replace('total-unit-', '')] = el;
+        });
+
+        // --- 3. HÀM TÍNH TOÁN ---
+        const calculate = () => {
+            const unitSums = {};
+            let grandTotal = 0;
+
+            inputs.forEach(input => {
+                const val = parseFloat(input.value) || 0;
+                const price = parseFloat(input.dataset.price) || 0;
+                const unitId = input.dataset.unitId;
+                const total = val * price;
+
+                const displayEl = input.nextElementSibling;
+                if (val > 0) {
+                    displayEl.textContent = moneyFormatter.format(total);
+                    displayEl.classList.remove('opacity-0');
+                    displayEl.classList.add('text-blue-600');
+                } else {
+                    displayEl.textContent = '';
+                    displayEl.classList.add('opacity-0');
+                }
+
+                if (!unitSums[unitId]) unitSums[unitId] = 0;
+                unitSums[unitId] += total;
+                grandTotal += total;
+            });
+
+            for (const [unitId, totalEl] of Object.entries(unitTotalElements)) {
+                const total = unitSums[unitId] || 0;
+                totalEl.textContent = moneyFormatter.format(total) + ' .000₫';
+                if (total > 0) {
+                    totalEl.classList.add('text-green-700');
+                    totalEl.classList.remove('text-gray-400');
+                } else {
+                    totalEl.classList.remove('text-emerald-700');
+                    totalEl.classList.add('text-gray-400');
+                }
+            }
+
+            if (grandTotalElement) {
+                grandTotalElement.textContent = moneyFormatter.format(grandTotal) + ' .000₫';
+            }
+        };
+
+        // --- 4. GẮN SỰ KIỆN TÍNH TOÁN ---
+        inputs.forEach(input => {
+            input.addEventListener('input', calculate);
+            input.addEventListener('focus', function () { this.select(); });
+        });
+        calculate();
+
+        // ============================================================
+        // --- 5. TÍNH NĂNG CHẶN RELOAD (QUAN TRỌNG) ---
+        // ============================================================
+
+        // A. Nếu người dùng bấm nút Lưu -> Đánh dấu là đang Submit hợp lệ -> Không chặn
+        if(submitButton){
+            submitButton.addEventListener('click', function() {
+                isSubmitting = true;
+            });
+        }
+
+        // B. Bắt sự kiện trước khi rời trang (F5, Tắt tab, Back)
+        window.addEventListener('beforeunload', function (e) {
+            // Nếu đang bấm nút Lưu thì cho qua
+            if (isSubmitting) {
+                return undefined;
+            }
+
+            // Kiểm tra xem người dùng đã nhập dữ liệu gì chưa?
+            let hasData = false;
+            for (let i = 0; i < inputs.length; i++) {
+                if (parseFloat(inputs[i].value) > 0) {
+                    hasData = true;
+                    break; 
+                }
+            }
+
+            // Nếu ĐÃ nhập liệu -> Hiện cảnh báo
+            if (hasData) {
+                // Câu thông báo chuẩn của trình duyệt (Chrome/Edge sẽ tự hiện text mặc định của nó)
+                const message = "Bạn có dữ liệu chưa lưu. Bạn có chắc chắn muốn rời đi?";
+                e.returnValue = message; 
+                return message;
+            }
+        });
+    });
+</script>
+}
