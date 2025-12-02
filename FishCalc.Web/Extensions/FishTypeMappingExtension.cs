@@ -13,8 +13,9 @@ public static class FishTypeMappingExtension
         {
             Id = entity.Id,
             Name = entity.Name,
-            // Thêm các thuộc tính khác (nếu có)
-            // ExampleProperty = entity.ExampleProperty
+            UnitOfMeasure = entity.UnitOfMeasure ?? string.Empty,
+            ImgFishUrl = entity.ImgFishUrl,
+            PricePerUnitOfMeasure = entity.FishPrice?.PricePerUnitOfMeasure ?? 0
         };
     }
 
@@ -23,19 +24,13 @@ public static class FishTypeMappingExtension
     {
         return new FishType
         {
-            // Không set ID, để DB tự cấp phát
+            Id = dto.Id,
             Name = dto.Name,
-            // Thêm các thuộc tính khác (nếu có)
+            UnitOfMeasure = dto.UnitOfMeasure ?? string.Empty,
+            ImgFishUrl = dto.ImgFishUrl
         };
     }
     
     // 3. Ánh xạ DTO (nguồn) vào Entity đã tồn tại (đích) - Dùng cho Cập nhật (Update)
     // Phương thức này CẬP NHẬT TRỰC TIẾP lên đối tượng entity
-    public static void MapToEntity(this FishType entity, FishTypeDto dto)
-    {
-        // KHÔNG CẬP NHẬT ID
-        entity.Name = dto.Name;
-        // Cập nhật các thuộc tính khác có thể thay đổi
-        // entity.AnotherProperty = dto.AnotherProperty;
-    }
 }
