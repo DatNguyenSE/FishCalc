@@ -11,6 +11,7 @@ public class FishType
     public int Id { get; set; }
     public required string Name { get; set; }
     public string? UnitOfMeasure {get;set;} ="Kilogram";
+    public string? ImgFishUrl { get; set; } 
 
 
     // -----------Nav property

@@ -11,7 +11,7 @@ public class Receipt
     public int ReceiptId { get; set; }
 
     [Required]
-    public int PaymentId { get; set; }     // FK -> SalaryPayment
+    public int SalaryProcessId { get; set; }     // FK -> SalaryProcessesID
 
     [Required]
     public int FishTypeId { get; set; }    // FK -> FishType

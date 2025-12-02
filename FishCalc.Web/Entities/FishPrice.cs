@@ -15,7 +15,5 @@ public class FishPrice
     [Required]
     public int FishTypeId { get; set; }
 
-    public DateTime EffectiveDate { get; set; } 
-
     // public FishType FishType { get; set; }
 }

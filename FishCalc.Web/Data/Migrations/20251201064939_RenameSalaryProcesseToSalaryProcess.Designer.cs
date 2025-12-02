@@ -4,6 +4,7 @@ using FishCalc.Web.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FishCalc.Web.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251201064939_RenameSalaryProcesseToSalaryProcess")]
+    partial class RenameSalaryProcesseToSalaryProcess
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -102,8 +105,14 @@ namespace FishCalc.Web.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PriceId"));
 
+                    b.Property<DateTime>("EffectiveDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("FishTypeId")
                         .HasColumnType("int");
+
+                    b.Property<string>("ImgFishUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("PricePerUnitOfMeasure")
                         .HasColumnType("decimal(18,2)");
@@ -123,9 +132,6 @@ namespace FishCalc.Web.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ImgFishUrl")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()

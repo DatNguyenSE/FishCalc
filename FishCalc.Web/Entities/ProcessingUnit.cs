@@ -15,5 +15,5 @@ public class ProcessingUnit
     public string? Contact { get; set; }
 
     //----------- Navigation
-    public ICollection<SalaryPayment>? SalaryPayments { get; set; }
+    public ICollection<SalaryProcess>? SalaryProcesses { get; set; }
 }
