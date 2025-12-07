@@ -17,7 +17,5 @@ public class AppDbContext : IdentityDbContext<AppUser>
     public DbSet<FishPrice> FishPrices { get; set; }
     public DbSet<ProcessingUnit> ProcessingUnits { get; set; }
     public DbSet<SalaryProcess> SalaryProcesses { get; set; }
-    public DbSet<Receipt> Receipts { get; set; }
-
     
 }

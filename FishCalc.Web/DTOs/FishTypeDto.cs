@@ -10,6 +10,6 @@ namespace FishCalc.Web.DTOs
 
         public decimal PricePerUnitOfMeasure { get; set; }
         
-
+        public FishPriceDto FishPrice { get; set; } = null!;
     }
 }

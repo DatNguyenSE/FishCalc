@@ -9,10 +9,12 @@ namespace FishCalc.Web.DTOs
         public int FishId { get; set; }
         public int UnitId { get; set; }
         public decimal TotalQuantityProcessed { get; set; }
+        public decimal SalaryPayment { get; set; }
         public string? Notes { get; set; }
 
         // Optional: include names for display
         public string FishTypeName { get; set; } = null!;
         public string ProcessingUnitName { get; set; } = null!;
+
     }
 }
