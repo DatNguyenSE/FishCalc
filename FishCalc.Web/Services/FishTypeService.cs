@@ -7,7 +7,7 @@ using FishCalc.Web.Entities;
 using FishCalc.Web.Interfaces;
 using FishCalc.Web.Interfaces.IServices;
 using System.Linq;
-using FishCalc.Web.Mapping;
+using FishCalc.Web.Extensions;
 
 namespace FishCalc.Web.Services;
 

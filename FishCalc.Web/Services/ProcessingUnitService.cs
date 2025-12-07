@@ -2,7 +2,7 @@ using System;
 using FishCalc.Web.DTOs;
 using FishCalc.Web.Interfaces;
 using FishCalc.Web.Interfaces.IServices;
-using FishCalc.Web.Mapping;
+using FishCalc.Web.Extensions;
 
 
 namespace FishCalc.Web.Services;
@@ -17,12 +17,7 @@ public class ProcessingUnitService(IProcessingUnitRepository _processingUnitRepo
 
     public async Task DeleteProcessingUnitAsync(int id)
     {
-        var entityToDelete = await _processingUnitRepo.GetProcessingUnitByIdAsync(id);
-        if(entityToDelete == null)
-        {
-            return;
-        }
-        await _processingUnitRepo.DeleteAsync(entityToDelete);
+        await _processingUnitRepo.DeleteAsync(id);
     }
 
     public async Task<IReadOnlyList<ProcessingUnitDto>> GetAllProcessingUnitsAsync()

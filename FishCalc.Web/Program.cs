@@ -1,5 +1,6 @@
 using FishCalc.Web.Data;
 using FishCalc.Web.Interfaces;
+using FishCalc.Web.Interfaces.IRepositories;
 using FishCalc.Web.Interfaces.IServices;
 using FishCalc.Web.Repositories;
 using FishCalc.Web.Services;
@@ -14,6 +15,8 @@ builder.Services.AddScoped<IFishTypeRepository, FishTypeRepository>();
 builder.Services.AddScoped<IFishTypeService, FishTypeService>();
 builder.Services.AddScoped<IProcessingUnitRepository, ProcessingUnitRepository>();
 builder.Services.AddScoped<IProcessingUnitService, ProcessingUnitService>();
+builder.Services.AddScoped<ISalaryProcessRepository, SalaryProcessingRepository>();
+builder.Services.AddScoped<ISalaryProcessService, SalaryProcessService>();
 
 builder.Services.AddDbContext<AppDbContext>(opt =>
 {

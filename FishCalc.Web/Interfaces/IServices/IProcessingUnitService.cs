@@ -9,8 +9,6 @@ public interface IProcessingUnitService
     Task<ProcessingUnitDto?> GetProcessingUnitByIdAsync(int id); 
     Task<IReadOnlyList<ProcessingUnitDto>>GetListUnitsByIdsAsync(List<int> ids);
 
-
-    // Commands
     Task CreateProcessingUnitAsync(ProcessingUnitDto dto);
     Task UpdateProcessingUnitAsync(ProcessingUnitDto dto);
     Task DeleteProcessingUnitAsync(int id);

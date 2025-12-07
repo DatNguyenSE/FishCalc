@@ -15,9 +15,14 @@ public class ProcessingUnitRepository(AppDbContext _context) : IProcessingUnitRe
        await _context.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(ProcessingUnit unit)
+    public async Task DeleteAsync(int id)
     {
-        _context.ProcessingUnits.Remove(unit);
+        var unit = await _context.ProcessingUnits.FindAsync(id);
+        if (unit == null)
+        {
+            throw new ArgumentException($"ProcessingUnit with id {id} not found.");
+        }
+         _context.ProcessingUnits.Remove(unit);
        await  _context.SaveChangesAsync();
     }
 
