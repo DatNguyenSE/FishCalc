@@ -1,90 +1,170 @@
-﻿<!-- 1. BUTTON TOGGLE (Nút Bật/Tắt) -->
-<button onclick="toggleSidebar()"
+﻿<button onclick="toggleSidebar()"
     class="fixed top-4 left-4 z-50 p-2 bg-slate-800 text-white rounded-lg shadow-md hover:bg-slate-700 focus:outline-none transition-all duration-300"
     id="sidebarToggleBtn">
-    <!-- Icon Menu (Hiện khi sidebar đóng) -->
-    <svg id="icon-menu" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24"
-        stroke="currentColor">
+    <svg id="icon-menu" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
     </svg>
-    <!-- Icon Close (Hiện khi sidebar mở) -->
-    <svg id="icon-close" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-        stroke="currentColor">
+    <svg id="icon-close" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
     </svg>
 </button>
 
-<!-- 2. SIDEBAR CONTENT -->
 <aside id="sidebar"
-    class="fixed left-0 top-0 h-full w-64 bg-slate-800 text-slate-100 shadow-xl flex flex-col z-40 transition-transform duration-300 transform translate-x-0">
+    class="fixed left-0 top-0 h-full w-64 bg-slate-800 text-slate-100 shadow-xl flex flex-col z-40 transition-all duration-300 ease-in-out">
 
-    <div class="p-6 text-center border-b border-slate-700 mt-12">
-        <h2 class="text-2xl font-bold tracking-wider">FishCalc</h2>
-        <p class="text-xs text-slate-400 mt-1">Quản Lý Lương Công Nhân</p>
+    <div id="sidebar-header" class="p-6 text-center border-b border-slate-700 mt-12 transition-all duration-300 overflow-hidden whitespace-nowrap">
+        <h2 class="text-2xl font-bold tracking-wider nav-text">FishCalc</h2>
+        <p class="text-xs text-slate-400 mt-1 nav-text">Quản Lý Lương</p>
     </div>
 
-    <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
-        <h3 class="text-xs font-semibold uppercase text-slate-400 pt-2 pb-1 ml-2">Chức Năng Chính</h3>
+    <nav class="flex-1 p-4 space-y-2 overflow-y-auto overflow-x-hidden">
+        
+        <h3 class="text-xs font-semibold uppercase text-slate-400 pt-2 pb-1 ml-2 mb-2 nav-text transition-all duration-300 whitespace-nowrap">
+            Chức Năng Chính
+        </h3>
 
         <a asp-page="/Index"
-            class="flex items-center space-x-3 p-3 rounded-lg hover:bg-slate-700 hover:text-white text-slate-300 transition duration-200">
-            <span class="text-lg">📊</span>
-            <span>Tổng quan</span>
+            class="nav-item flex items-center p-3 rounded-lg hover:bg-slate-700 hover:text-white text-slate-300 transition-all duration-200 justify-start group">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+            </svg>
+            <span class="nav-text ml-3 whitespace-nowrap transition-opacity duration-300">Tổng quan</span>
         </a>
 
         <a asp-page="/FishTypes"
-            class="flex items-center space-x-3 p-3 rounded-lg hover:bg-slate-700 hover:text-white text-slate-300 transition duration-200">
-            <span class="text-lg">🐟</span>
-            <span>Loại Cá & Giá</span>
+            class="nav-item flex items-center p-3 rounded-lg hover:bg-slate-700 hover:text-white text-slate-300 transition-all duration-200 justify-start group">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+            </svg>
+            <span class="nav-text ml-3 whitespace-nowrap transition-opacity duration-300">Loại Cá & Giá</span>
         </a>
 
         <a asp-page="/Features/ProcessingSetupModel"
-            class="flex items-center space-x-3 p-3 rounded-lg hover:bg-slate-700 hover:text-white text-slate-300 transition duration-200">
-            <span class="text-lg">💵</span>
-            <span>Tính Lương</span>
+            class="nav-item flex items-center p-3 rounded-lg hover:bg-slate-700 hover:text-white text-slate-300 transition-all duration-200 justify-start group">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span class="nav-text ml-3 whitespace-nowrap transition-opacity duration-300">Tính Lương</span>
         </a>
 
         <a asp-page="/Receipts/Index"
-            class="flex items-center space-x-3 p-3 rounded-lg hover:bg-slate-700 hover:text-white text-slate-300 transition duration-200">
-            <span class="text-lg">📦</span>
-            <span>Biên lai</span>
+            class="nav-item flex items-center p-3 rounded-lg hover:bg-slate-700 hover:text-white text-slate-300 transition-all duration-200 justify-start group">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <span class="nav-text ml-3 whitespace-nowrap transition-opacity duration-300">Biên lai</span>
         </a>
 
-        <h3 class="text-xs font-semibold uppercase text-slate-400 pt-6 pb-1 ml-2">Đơn vị</h3>
+        <h3 class="text-xs font-semibold uppercase text-slate-400 pt-6 pb-1 ml-2 mb-2 nav-text transition-all duration-300 whitespace-nowrap">
+            Đơn vị
+        </h3>
+
         <a asp-page="/Units/Index"
-            class="flex items-center space-x-3 p-3 rounded-lg hover:bg-slate-700 hover:text-white text-slate-300 transition duration-200">
-            <span class="text-lg">👩‍🌾</span>
-            <span>các tổ & cá nhân</span>
+            class="nav-item flex items-center p-3 rounded-lg hover:bg-slate-700 hover:text-white text-slate-300 transition-all duration-200 justify-start group">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+            <span class="nav-text ml-3 whitespace-nowrap transition-opacity duration-300">Các tổ & cá nhân</span>
         </a>
     </nav>
 
-    <div class="mt-auto p-4 border-t border-slate-700">
-        <p class="text-xs text-slate-500 text-center">© 2025 FishCalc Web</p>
+    <div id="sidebar-footer" class="mt-auto p-4 border-t border-slate-700 nav-text transition-opacity duration-300">
+        <p class="text-xs text-slate-500 text-center">© 2025 FishCalc</p>
     </div>
 </aside>
 
 <!-- 3. SCRIPT LOGIC (Nằm luôn trong Component này) -->
 <script>
-    function toggleSidebar() {
+    // Hàm thực hiện việc Đóng/Mở giao diện
+    function setSidebarState(isClosed) {
         const sidebar = document.getElementById('sidebar');
-        const mainContent = document.getElementById('main-content'); // ID này sẽ nằm ở Layout
+        const mainContent = document.getElementById('main-content');
         const iconMenu = document.getElementById('icon-menu');
         const iconClose = document.getElementById('icon-close');
-
-        const isClosed = sidebar.classList.contains('-translate-x-full');
+        const navTexts = document.querySelectorAll('.nav-text');
+        const navItems = document.querySelectorAll('.nav-item');
 
         if (isClosed) {
-            // MỞ
-            sidebar.classList.remove('-translate-x-full');
-            if (mainContent) mainContent.classList.add('ml-64');
-            iconMenu.classList.add('hidden');
-            iconClose.classList.remove('hidden');
-        } else {
-            // ĐÓNG
-            sidebar.classList.add('-translate-x-full');
-            if (mainContent) mainContent.classList.remove('ml-64');
+            // --- TRẠNG THÁI: ĐÓNG (Icon Only) ---
+            sidebar.classList.remove('w-64');
+            sidebar.classList.add('w-20');
+            
+            // Ẩn chữ
+            navTexts.forEach(el => {
+                el.classList.add('opacity-0', 'hidden');
+            });
+
+            // Căn giữa Icon
+            navItems.forEach(el => {
+                el.classList.remove('justify-start');
+                el.classList.add('justify-center');
+            });
+
+            // Kéo Main Content lại gần
+            if (mainContent) {
+                mainContent.classList.remove('ml-64');
+                mainContent.classList.add('ml-20');
+            }
+
+            // Đổi nút bấm thành Menu
             iconMenu.classList.remove('hidden');
             iconClose.classList.add('hidden');
+
+        } else {
+            // --- TRẠNG THÁI: MỞ (Full Width) ---
+            sidebar.classList.remove('w-20');
+            sidebar.classList.add('w-64');
+            
+            // Hiện chữ
+            navTexts.forEach(el => {
+                el.classList.remove('hidden');
+                setTimeout(() => el.classList.remove('opacity-0'), 50);
+            });
+
+            // Căn trái Icon + Chữ
+            navItems.forEach(el => {
+                el.classList.remove('justify-center');
+                el.classList.add('justify-start');
+            });
+
+            // Đẩy Main Content ra xa
+            if (mainContent) {
+                mainContent.classList.remove('ml-20');
+                mainContent.classList.add('ml-64');
+            }
+
+            // Đổi nút bấm thành Close
+            iconMenu.classList.add('hidden');
+            iconClose.classList.remove('hidden');
         }
     }
+
+    // Hàm sự kiện khi bấm nút
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        // Kiểm tra xem hiện tại có đang đóng không (dựa vào class w-20)
+        const isCurrentlyClosed = sidebar.classList.contains('w-20');
+        
+        // Nếu đang ĐÓNG thì giờ sẽ MỞ (false), nếu đang MỞ thì giờ sẽ ĐÓNG (true)
+        const newStateIsClosed = !isCurrentlyClosed;
+        
+        // 1. Cập nhật giao diện
+        setSidebarState(newStateIsClosed);
+
+        // 2. Lưu vào LocalStorage
+        localStorage.setItem('fishCalcSidebarState', newStateIsClosed ? 'closed' : 'open');
+    }
+
+    // --- QUAN TRỌNG: KHI TẢI TRANG SẼ KIỂM TRA TRẠNG THÁI ĐÃ LƯU ---
+    document.addEventListener('DOMContentLoaded', () => {
+        // Lấy trạng thái đã lưu, mặc định là 'open' nếu chưa có
+        const savedState = localStorage.getItem('fishCalcSidebarState');
+        
+        // Nếu đã lưu là 'closed' thì gọi hàm đóng ngay lập tức
+        if (savedState === 'closed') {
+            setSidebarState(true);
+        } else {
+            setSidebarState(false);
+        }
+    });
 </script>
