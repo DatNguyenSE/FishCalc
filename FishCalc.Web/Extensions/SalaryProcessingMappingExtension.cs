@@ -10,10 +10,13 @@ public static class SalaryProcessMappingExtension
     {
         return new SalaryProcessDto
         {
-            PaymentId= entity.SalaryProcessId,
-            PaymentDate = entity.Date,
-            FishId= entity.FishTypeId,
+            SalaryProcessId= entity.SalaryProcessId,
+            Date = entity.Date,
+            FishTypeId= entity.FishTypeId,
             UnitId= entity.ProcessingUnitId,
+            UnitName = entity.ProcessingUnit?.UnitName,
+            FishTypeName = entity.FishType?.Name,
+            SalaryPayment = entity.SalaryPayment,
             TotalQuantityProcessed= entity.TotalQuantityProcessed,
             Notes= entity.Notes
         };
@@ -25,11 +28,12 @@ public static class SalaryProcessMappingExtension
     {
         return new SalaryProcess
         {
-            SalaryProcessId = dto.PaymentId,
-            Date= dto.PaymentDate,
-            FishTypeId= dto.FishId,
+            SalaryProcessId = dto.SalaryProcessId,
+            Date= dto.Date,
+            FishTypeId= dto.FishTypeId,
             ProcessingUnitId= dto.UnitId,
             TotalQuantityProcessed= dto.TotalQuantityProcessed,
+            SalaryPayment= dto.SalaryPayment,
             Notes= dto.Notes
         };
     }

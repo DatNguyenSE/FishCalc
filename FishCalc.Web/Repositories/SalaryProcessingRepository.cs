@@ -32,10 +32,14 @@ public class SalaryProcessingRepository(AppDbContext _context) : ISalaryProcessR
         await _context.SaveChangesAsync();
     }
 
-    public async Task<SalaryProcess?> GetSalaryProcessByDateAsync(DateOnly date)
+    public async Task<IReadOnlyList<SalaryProcess?>> GetProcessesListByDateAsync(DateOnly date)
     {
-        var salaryProcess = await _context.SalaryProcesses.FirstAsync(x => x.Date == date);
-        return salaryProcess;
+        var salaryProcessList = await _context.SalaryProcesses
+        .Include(f => f.FishType)
+        .Include(p => p.ProcessingUnit)
+        .Where(x => x.Date == date)
+        .ToListAsync();
+        return salaryProcessList;
     }
 
     public async Task<IReadOnlyList<SalaryProcess>> GetSalaryProcessesAsync()

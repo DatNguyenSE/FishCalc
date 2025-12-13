@@ -1,15 +1,31 @@
-namespace FishCalc.Web.DTOs
-{
-    public class ReceiptDto
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace FishCalc.Web.DTOs;
+
+    // 1. DTO cho từng dòng chi tiết (Từng loại cá trong tổ)
+    public class ReceiptGroupViewModel
     {
-        public int ReceiptId { get; set; }
-        public int PaymentId { get; set; }
-        public int FishTypeId { get; set; }
-        public int UnitId { get; set; }
+        public string UnitName { get; set; } = string.Empty;
+        public string FishTypeName { get; set; } = string.Empty;
         public string? Notes { get; set; }
 
-        // Optional: display names
-        public string? FishTypeName { get; set; }
-        public string? UnitName { get; set; }
+        public List<ReceiptItemViewModel> Items { get; set; } = new();
+
+        // Tổng của cả tổ
+        public decimal TotalWeight => Items.Sum(x => x.Quantity);
+        public decimal TotalMoney => Items.Sum(x => x.TotalPrice);
     }
-}
+
+    // 2. Đại diện cho 1 dòng Cá (Item)
+    public class ReceiptItemViewModel
+    {
+        public string FishName { get; set; } = string.Empty;
+        public decimal Quantity { get; set; }   // Số lượng (Kg)
+        public decimal TotalPrice { get; set; } // Thành tiền (VNĐ)
+        public string? Notes { get; set; }
+
+        // Tính đơn giá (Giá cá) = Thành tiền / Số lượng
+        public decimal PricePerKg => Quantity > 0 ? TotalPrice / Quantity : 0;
+    }

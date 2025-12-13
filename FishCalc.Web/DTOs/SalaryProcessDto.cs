@@ -1,20 +1,19 @@
-using System;
-
 namespace FishCalc.Web.DTOs
 {
     public class SalaryProcessDto
     {
-        public int PaymentId { get; set; }
-        public DateOnly PaymentDate { get; set; }
-        public int FishId { get; set; }
+        public int SalaryProcessId { get; set; }
+        public DateOnly Date { get; set; }
         public int UnitId { get; set; }
-        public decimal TotalQuantityProcessed { get; set; }
-        public decimal SalaryPayment { get; set; }
+        public int FishTypeId { get; set; }
+        
+        // Dữ liệu quan trọng
+        public decimal TotalQuantityProcessed { get; set; } // Tổng Kg
+        public decimal SalaryPayment { get; set; }          // Tổng tiền (Thành tiền)
         public string? Notes { get; set; }
 
-        // Optional: include names for display
-        public string FishTypeName { get; set; } = null!;
-        public string ProcessingUnitName { get; set; } = null!;
-
+        // Tên hiển thị (đã Map từ bảng liên kết)
+        public string FishTypeName { get; set; } = "Chưa xác định";
+        public string UnitName { get; set; } = "Chưa xác định";
     }
 }
