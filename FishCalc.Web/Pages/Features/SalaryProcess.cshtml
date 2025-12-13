@@ -9,7 +9,27 @@ var culture = new CultureInfo("vi-VN");
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/airbnb.css">
+@* Kiểm tra nếu có thông báo thành công thì hiện ra *@
+@if (!string.IsNullOrEmpty(Model.SuccessMessage))
+{
+    <div class="mb-4 p-4 text-sm text-green-800 rounded-lg bg-green-50 border border-green-200" role="alert">
+        <div class="flex items-center">
+            <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
+            </svg>
+            <span class="font-medium">Thành công!</span> @Model.SuccessMessage
+        </div>
+    </div>
+}
 
+@* (Tùy chọn) Hiển thị lỗi nếu có *@
+@if (!ModelState.IsValid)
+{
+    <div class="mb-4 p-4 text-sm text-red-800 rounded-lg bg-red-50 border border-red-200" role="alert">
+        <span class="font-medium">Lỗi:</span>
+        <div asp-validation-summary="All" class="list-disc pl-5"></div>
+    </div>
+}
 <div class="container mx-auto px-4 py-6 max-w-full">
 
     <form method="post" asp-page-handler="ProcessData">
@@ -23,7 +43,7 @@ var culture = new CultureInfo("vi-VN");
                     <span class="text-slate-500 text-sm">Nhập khối lượng (kg) cho từng Tổ theo Loại cá.</span>
                 </div>
             </div>
-
+<!-- datetime -->
             <div class="flex items-center gap-3 bg-slate-50 p-2 rounded-lg border border-slate-200">
                 <label for="processDate" class="text-sm  font-semibold text-slate-600 pl-2 whitespace-nowrap">
                     <div class="text-red-500">Ngày thực hiện: </div>
@@ -125,6 +145,11 @@ var culture = new CultureInfo("vi-VN");
                 <span>Lưu & Tính Lương</span>
             </button>
         </div>
+<div>
+    <textarea asp-for="NoteOption" 
+              class="bg-white border border-gray-300 text-slate-700 text-sm p-2.5 shadow-sm font-medium cursor-pointer w-full **h-24** resize-none"
+              placeholder="ghi chú ..."></textarea>
+</div>
     </form>
 </div>
 

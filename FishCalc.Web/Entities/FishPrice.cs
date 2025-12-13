@@ -15,5 +15,5 @@ public class FishPrice
     [Required]
     public int FishTypeId { get; set; }
 
-    // public FishType FishType { get; set; }
+    public virtual FishType? FishType { get; set; }
 }

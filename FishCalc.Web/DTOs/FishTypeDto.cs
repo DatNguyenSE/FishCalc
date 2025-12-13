@@ -10,6 +10,5 @@ namespace FishCalc.Web.DTOs
 
         public decimal PricePerUnitOfMeasure { get; set; }
         
-
     }
 }

@@ -11,22 +11,25 @@ public class SalaryProcess
     public int SalaryProcessId { get; set; }
 
     [Required]
-    public DateTime Date { get; set; }
+    public DateOnly Date { get; set; }
 
     [Required]
-    public int FishId { get; set; }
+    public int FishTypeId { get; set; }
 
     [Required]
-    public int UnitId { get; set; }
+    public int ProcessingUnitId { get; set; }
 
     [Required]
     public decimal TotalQuantityProcessed { get; set; }  // decimal để tính chính xác hơn
+
+    [Required]
+    public decimal SalaryPayment { get; set; }
 
     public string? Notes { get; set; }
 
     // ---------------- Navigation Properties---------------
 
-    public required FishType FishType { get; set; } 
+    public  FishType? FishType { get; set; } 
 
-    public required ProcessingUnit ProcessingUnit { get; set; }
+    public  ProcessingUnit? ProcessingUnit { get; set; }
 }

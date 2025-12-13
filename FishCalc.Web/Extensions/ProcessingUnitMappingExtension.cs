@@ -1,7 +1,7 @@
 using FishCalc.Web.DTOs;
 using FishCalc.Web.Entities;
 
-namespace FishCalc.Web.Mapping;
+namespace FishCalc.Web.Extensions;
 
 // Lớp tĩnh chứa các extension method
 public static class ProcessingUnitMappingExtension

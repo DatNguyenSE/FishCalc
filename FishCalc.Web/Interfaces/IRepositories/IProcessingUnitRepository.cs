@@ -5,7 +5,7 @@ public interface IProcessingUnitRepository
 {
     Task CreateAsync(ProcessingUnit unit);
     Task UpdateAsync(ProcessingUnit unit);
-    Task DeleteAsync(ProcessingUnit unit);
+    Task DeleteAsync(int id);
     Task<IReadOnlyList<ProcessingUnit>> GetProcessingUnitsAsync();
     Task<ProcessingUnit?> GetProcessingUnitByIdAsync(int id);
     Task<IReadOnlyList<ProcessingUnit>>GetListUnitsByIdsAsync(List<int> ids);

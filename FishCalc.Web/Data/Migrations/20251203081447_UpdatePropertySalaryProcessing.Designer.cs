@@ -4,6 +4,7 @@ using FishCalc.Web.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FishCalc.Web.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251203081447_UpdatePropertySalaryProcessing")]
+    partial class UpdatePropertySalaryProcessing
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -159,6 +162,31 @@ namespace FishCalc.Web.Migrations
                     b.ToTable("ProcessingUnits");
                 });
 
+            modelBuilder.Entity("FishCalc.Web.Entities.Receipt", b =>
+                {
+                    b.Property<int>("ReceiptId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReceiptId"));
+
+                    b.Property<int>("FishTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SalaryProcessId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UnitId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ReceiptId");
+
+                    b.ToTable("Receipts");
+                });
+
             modelBuilder.Entity("FishCalc.Web.Entities.SalaryProcess", b =>
                 {
                     b.Property<int>("SalaryProcessId")
@@ -167,8 +195,8 @@ namespace FishCalc.Web.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SalaryProcessId"));
 
-                    b.Property<DateOnly>("Date")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("FishTypeId")
                         .HasColumnType("int");
@@ -178,9 +206,6 @@ namespace FishCalc.Web.Migrations
 
                     b.Property<int>("ProcessingUnitId")
                         .HasColumnType("int");
-
-                    b.Property<decimal>("SalaryPayment")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TotalQuantityProcessed")
                         .HasColumnType("decimal(18,2)");

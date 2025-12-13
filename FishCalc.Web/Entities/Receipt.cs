@@ -21,6 +21,5 @@ public class Receipt
 
     public string? Notes { get; set; }
 
-
 }
 
