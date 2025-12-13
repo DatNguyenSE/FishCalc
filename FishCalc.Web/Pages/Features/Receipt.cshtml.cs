@@ -10,11 +10,12 @@ namespace FishCalc.Web.Pages.Features
         [BindProperty(SupportsGet = true)]
         public DateTime SearchDate { get; set; } = DateTime.Today;
 
-        // Dữ liệu hiển thị ra HTML
         public List<ReceiptGroupViewModel> ReceiptData { get; set; } = new();
 
         public decimal GrandTotalMoney { get; set; }
         public decimal GrandTotalWeight { get; set; }
+        public string DailyNote { get; set; } = string.Empty;
+
 
         public async Task OnGetAsync()
         {
@@ -31,11 +32,13 @@ namespace FishCalc.Web.Pages.Features
             // 3. Duyệt qua từng nhóm để tạo ViewModel
             foreach (var group in groupedData)
             {
+                
                 // Lấy tên tổ từ phần tử đầu tiên trong nhóm
                 // Lưu ý: Dùng null coalescing (??) đề phòng tên null
                 var firstItem = group.First();
+                DailyNote = firstItem.Notes ?? string.Empty;
                 var unitName = firstItem.UnitName ?? $"Tổ #{firstItem.UnitId}";
-
+                
                 var groupVm = new ReceiptGroupViewModel
                 {
                     UnitName = unitName,
@@ -47,7 +50,7 @@ namespace FishCalc.Web.Pages.Features
                 {
                     groupVm.Items.Add(new ReceiptItemViewModel
                     {
-                        FishName = item.FishTypeName ?? "Cá không tên",
+                        FishName = item.FishTypeName ,
                         Quantity = item.TotalQuantityProcessed,
                         TotalPrice = item.SalaryPayment,
                         Notes = item.Notes

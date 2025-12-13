@@ -8,8 +8,6 @@ namespace FishCalc.Web.DTOs;
     public class ReceiptGroupViewModel
     {
         public string UnitName { get; set; } = string.Empty;
-        public string FishTypeName { get; set; } = string.Empty;
-        public string? Notes { get; set; }
 
         public List<ReceiptItemViewModel> Items { get; set; } = new();
 

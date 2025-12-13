@@ -62,80 +62,105 @@ var cultureInfo = new System.Globalization.CultureInfo("vi-VN");
                 <thead>
                     <tr class="text-slate-500 border-b border-slate-200 text-xs uppercase tracking-wider">
                         <th class="pb-3 font-semibold pl-4 w-4/12">Tổ / Công nhân</th>
-                        <th class="pb-3 font-semibold text-left w-2/12">Tên cá</th>
                         <th class="pb-3 font-semibold text-center w-2/12">S.Lượng (Kg)</th>
-                        <th class="pb-3 font-semibold text-right w-2/12">Đơn giá</th>
                         <th class="pb-3 font-semibold text-right w-2/12 pr-4">Thành tiền</th>
                     </tr>
                 </thead>
                 <tbody class="text-sm">
+                    <!-- break-before-page để tách mỗi tổ là 1 trang-->
                     @foreach (var unit in Model.ReceiptData)
                     {
-                    <tr
-                        class="bg-slate-50 border-b border-slate-100 print:bg-gray-100 print:border-gray-300 break-inside-avoid">
+                    <tr class="bg-slate-100 border-y border-slate-300 break-inside-avoid">
+
                         <td class="py-3 pl-4">
                             <div class="flex items-center gap-2">
                                 <div
-                                    class="w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xs print:hidden">
+                                    class="w-6 h-6 rounded-full bg-blue-200 text-blue-700 flex items-center justify-center text-xs print:hidden">
                                     <i class="fa-solid fa-users"></i>
                                 </div>
-                                <span class="font-bold text-slate-800 text-base">@unit.UnitName</span>
+                                <span class="font-bold text-slate-800 uppercase tracking-wide">
+                                    @unit.UnitName
+                                </span>
                             </div>
                         </td>
-                        <td class="py-3 text-left text-slate-500 italic text-xs">@unit.FishTypeName</td>
 
-                        <td class="py-3 text-center font-bold text-slate-700">@unit.TotalWeight.ToString("N2")</td>
+                        <td class="py-3  text-center font-bold  text-blue-700">
+                            @unit.TotalWeight.ToString("N1") kg 
+                            <span class="text-xs text-slate-400 italic font-medium">
+                               (tổng kí)
+                            </span>
+                        </td>
 
-                        <td class="py-3 text-right text-slate-400">-</td>
-
-                        <td class="py-3 pr-4 text-right font-bold text-blue-600 print:text-black">
-                            @unit.TotalMoney.ToString("#,##0", cultureInfo)
+                        <td class="py-3 pr-4 text-center font-bold text-blue-700 print:text-black">
+                            @unit.TotalMoney.ToString("#,##0", cultureInfo) .000 
+                            <span class="text-xs text-slate-400 italic font-medium">
+                               (tổng tiền)
+                            </span>
                         </td>
                     </tr>
 
+
+                    var count = 0;
                     @foreach (var item in unit.Items)
                     {
-                    <tr class="hover:bg-slate-50 border-b border-slate-50 transition-colors">
-
-
-                        <td class="py-2 text-left text-xs text-slate-400 italic">
-                            @item.Notes
-                        </td>
-                        <td class="py-2 text-left text-xs text-slate-400 italic">
-                            @item.FishName
-                        </td>
-
-                        <td class="py-2 text-center text-slate-600">
-                            @item.Quantity.ToString("N2")
+                    count++;
+                    <tr class="border-b border-dashed border-slate-200 text-sm">
+                        <td class="px-4 py-2 text-slate-600">
+                            <span class="text-blue-600 font-semibold">@count.</span>
+                            <span class="ml-1">@item.FishName</span>
+                            <span class="text-xs text-slate-400 italic">
+                                (@item.PricePerKg/kg)
+                            </span>
                         </td>
 
-                        <td class="py-2 text-right text-slate-600 font-mono text-xs">
-                            @item.PricePerKg.ToString("#,##0")
+                        <td class="py-2 text-center text-slate-500 text-sm">
+                            @item.Quantity.ToString("N1") kg
                         </td>
 
-                        <td class="py-2 pr-4 text-right text-slate-800 font-medium">
-                            @item.TotalPrice.ToString("#,##0")
+                        <td class="py-2 text-center text-slate-600 font-medium">
+                            @item.TotalPrice.ToString("#,##0") .000
                         </td>
+
                     </tr>
+
+
                     }
+                    <tr class="hidden print:hidden sm:table-row">
+                        <td colspan="3" class="h-6"></td>
+                    </tr>
+
                     }
+
                 </tbody>
 
                 <tfoot>
-                    <tr class="border-t-2 border-slate-800 bg-slate-50">
-                        <td colspan="2" class="pt-4 pl-4 text-base font-bold text-slate-800 uppercase">
-                            Tổng cộng toàn xưởng
+                    <tr class="border-t-2 border-slate-900 bg-slate-100">
+                        <td class="pt-4 pl-4 text-base font-bold uppercase text-slate-800">
+                            Tổng cộng
                         </td>
                         <td class="pt-4 text-center text-base font-bold text-slate-800">
-                            @Model.GrandTotalWeight.ToString("N2")
+                            @Model.GrandTotalWeight.ToString("N2") kg
                         </td>
-                        <td></td>
-                        <td class="pt-4 pr-4 text-right text-xl font-bold text-red-600 print:text-black">
-                            @Model.GrandTotalMoney.ToString("#,##0", cultureInfo)
+                        <td class="pt-4 pr-4 text-center text-xl font-extrabold text-red-600 print:text-black">
+                            @Model.GrandTotalMoney.ToString("#,##0", cultureInfo) .000
                         </td>
                     </tr>
                 </tfoot>
+
             </table>
+            @if (!string.IsNullOrWhiteSpace(Model.DailyNote))
+            {
+            <div
+                class="mt-6 p-4 border border-dashed border-slate-300 rounded-lg bg-slate-50 print:bg-white break-inside-avoid">
+                <p class="text-sm font-semibold text-slate-700 uppercase mb-1">
+                    Ghi chú
+                </p>
+                <p class="text-sm text-slate-600 italic leading-relaxed">
+                    @Model.DailyNote
+                </p>
+            </div>
+            }
+
 
             <div class="mt-12 grid grid-cols-2 gap-4 text-right print:mt-8 break-inside-avoid">
 
