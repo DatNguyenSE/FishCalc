@@ -20,10 +20,10 @@ namespace FishCalc.Web.DTOs;
     public class ReceiptItemViewModel
     {
         public string FishName { get; set; } = string.Empty;
-        public decimal Quantity { get; set; }   // Số lượng (Kg)
-        public decimal TotalPrice { get; set; } // Thành tiền (VNĐ)
+        public decimal Quantity { get; set; }  
+
+        public decimal TotalPrice { get; set; } 
         public string? Notes { get; set; }
 
-        // Tính đơn giá (Giá cá) = Thành tiền / Số lượng
-        public decimal PricePerKg => Quantity > 0 ? TotalPrice / Quantity : 0;
+        public decimal PricePerKg { get; set; }
     }

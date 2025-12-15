@@ -16,14 +16,19 @@ public class FishTypeRepository(AppDbContext context) : IFishTypeRepository
 
     }
 
-    public async Task  Delete(FishType fish)
+    public async Task  Delete(int id)
     {
+        var fish = await context.FishTypes.FindAsync(id);
+        if (fish == null)
+        {
+            return;
+        }
        context.FishTypes.Remove(fish);
         await context.SaveChangesAsync();
 
     }
 
-    public async Task<FishType?> GetFishTypeByIdAsync(int id)
+    public async Task<FishType?> GetFishTypeByIdAsync(int? id)
     {
        return await context.FishTypes.Include(x => x.FishPrice)
             .SingleOrDefaultAsync(x => x.Id == id);

@@ -16,6 +16,10 @@ public class SalaryProcessingRepository(AppDbContext _context) : ISalaryProcessR
 
     public async Task CreateSalaryProcessesByList(List<SalaryProcess> salaryProcesses)
     {
+        if (_context.SalaryProcesses.FirstOrDefault(sp => sp.Date == salaryProcesses[0].Date) != null)
+        {
+            throw new ArgumentException($"Lương ngày: {salaryProcesses[0].Date} đã được tính, hãy kiểm tra lại.");
+        }
         await _context.SalaryProcesses.AddRangeAsync(salaryProcesses);
     
         await _context.SaveChangesAsync();
@@ -32,7 +36,7 @@ public class SalaryProcessingRepository(AppDbContext _context) : ISalaryProcessR
         await _context.SaveChangesAsync();
     }
 
-    public async Task<IReadOnlyList<SalaryProcess?>> GetProcessesListByDateAsync(DateOnly date)
+    public async Task<IReadOnlyList<SalaryProcess?>> GetSalaryProcessesListByDateAsync(DateOnly date)
     {
         var salaryProcessList = await _context.SalaryProcesses
         .Include(f => f.FishType)

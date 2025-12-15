@@ -1,5 +1,7 @@
 ﻿@page
 @model FishCalc.Web.Pages.Features.ReceiptModel
+@using FishCalc.Web.Helpers.Enums
+
 @{
 ViewData["Title"] = "Báo cáo sản lượng";
 var cultureInfo = new System.Globalization.CultureInfo("vi-VN");
@@ -38,9 +40,18 @@ var cultureInfo = new System.Globalization.CultureInfo("vi-VN");
             class="p-8 border-b border-slate-100 bg-slate-50/50 print:bg-white print:p-0 print:border-b-2 print:border-black print:mb-4">
             <div class="flex justify-between items-start">
                 <div>
-                    <span
-                        class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded border border-blue-200 print:hidden">HOÀN
-                        TẤT</span>
+                   @{
+    var isCompleted = Model.Status == SalaryStatus.Completed;
+    var statusText = isCompleted ? "Hoàn thành" : "Chưa xác nhận";
+}
+
+<span class="text-xs font-semibold px-2.5 py-0.5 rounded border print:hidden
+    @(isCompleted
+        ? "bg-green-100 text-green-800 border-green-200"
+        : "bg-red-100 text-red-800 border-red-200")">
+    @statusText
+</span>
+
                     <h2 class="mt-2 text-3xl font-bold text-slate-900 uppercase tracking-tight">Bảng Kê Lương</h2>
                     <p class="text-slate-500 mt-1">Ngày tính lương: <span
                             class="font-semibold text-slate-900">@Model.SearchDate.ToString("dd/MM/yyyy")</span></p>
@@ -48,7 +59,7 @@ var cultureInfo = new System.Globalization.CultureInfo("vi-VN");
                 <div class="text-right">
                     <div class="text-2xl font-bold text-blue-600 tracking-wider print:text-black">FISH<span
                             class="text-slate-700">CALC</span></div>
-                    <div class="text-sm text-slate-500 mt-1">Phân xưởng chế biến thủy hải sản</div>
+                    <div class="text-sm text-slate-500 mt-1">Xưởng chế biến thủy hải sản</div>
                     <div class="text-xs text-slate-400 mt-0.5">Mã phiếu:
                         #@Model.SearchDate.ToString("yyyyMMdd")-@DateTime.Now.ToString("HHmm")</div>
                 </div>
@@ -85,16 +96,16 @@ var cultureInfo = new System.Globalization.CultureInfo("vi-VN");
                         </td>
 
                         <td class="py-3  text-center font-bold  text-blue-700">
-                            @unit.TotalWeight.ToString("N1") kg 
+                            @unit.TotalWeight.ToString("N1") kg
                             <span class="text-xs text-slate-400 italic font-medium">
-                               (tổng kí)
+                                (tổng kí)
                             </span>
                         </td>
 
                         <td class="py-3 pr-4 text-center font-bold text-blue-700 print:text-black">
-                            @unit.TotalMoney.ToString("#,##0", cultureInfo) .000 
+                            @unit.TotalMoney.ToString("#,##0", cultureInfo) .000
                             <span class="text-xs text-slate-400 italic font-medium">
-                               (tổng tiền)
+                                (tổng tiền)
                             </span>
                         </td>
                     </tr>

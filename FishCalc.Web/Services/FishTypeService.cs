@@ -21,7 +21,7 @@ public class FishTypeService(IFishTypeRepository _fishTypeRepository) : IFishTyp
         return entities.Select(e => e.ToDto()).ToList();
     }
 
-    public async Task<FishTypeDto?> GetFishTypeByIdAsync(int id)
+    public async Task<FishTypeDto?> GetFishTypeByIdAsync(int? id)
     {
         var entity = await _fishTypeRepository.GetFishTypeByIdAsync(id);
 
@@ -56,15 +56,7 @@ public class FishTypeService(IFishTypeRepository _fishTypeRepository) : IFishTyp
     }
     public async Task DeleteFishTypeAsync(int id)
     {
-        var entityToDelete = await _fishTypeRepository.GetFishTypeByIdAsync(id);
-
-        if (entityToDelete == null)
-        {
-            return; 
-        }
-
-        await _fishTypeRepository.Delete(entityToDelete);
-
+        await _fishTypeRepository.Delete(id);
     }
 
     

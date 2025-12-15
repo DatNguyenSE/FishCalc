@@ -29,7 +29,6 @@ namespace FishCalc.Web.Pages.Features
         public DateTime ProcessDate { get; set; }
         [BindProperty]
         public string? NoteOption { get; set; }
-        public string? SuccessMessage { get; set; }
         public async Task OnGetAsync()
         {
             List<int> fishIds = new List<int>();
@@ -79,80 +78,91 @@ namespace FishCalc.Web.Pages.Features
 
         public async Task<IActionResult> OnPostProcessData()
         {
-
-            // === TỐI ƯU HÓA: LẤY GIÁ CÁ 1 LẦN DUY NHẤT ===
-
-            // B1: Lấy tất cả FishId có trong dữ liệu nhập lên (loại bỏ trùng lặp)
-            var allFishIds = Data.SelectMany(unit => unit.Value.Keys).Distinct().ToList(); // return fishTypeId
-
-            var fishList = await _fishTypeService.GetListFishTypeByIdAsync(allFishIds);
-
-            // B3: Tạo Dictionary (Key: FishId, Value: Price)
-            var fishPriceDict = fishList.ToDictionary(f => f.Id, f => f.PricePerUnitOfMeasure);
-
-            var salaryProcessesList = new List<SalaryProcessDto>();
-
-            // Xử lý dữ liệu nhập liệu
-            foreach (var unitEntry in Data)
+            try
             {
-                int unitId = unitEntry.Key;
-                var fishMap = unitEntry.Value;
 
-                foreach (var fishEntry in fishMap)
+                // === TỐI ƯU HÓA: LẤY GIÁ CÁ 1 LẦN DUY NHẤT ===
+
+                // B1: Lấy tất cả FishId có trong dữ liệu nhập lên (loại bỏ trùng lặp)
+                var allFishIds = Data.SelectMany(unit => unit.Value.Keys).Distinct().ToList(); // return fishTypeId
+
+                var fishList = await _fishTypeService.GetListFishTypeByIdAsync(allFishIds);
+
+                // B3: Tạo Dictionary (Key: FishId, Value: Price)
+                var fishPriceDict = fishList.ToDictionary(f => f.Id, f => f.PricePerUnitOfMeasure);
+
+                var salaryProcessesList = new List<SalaryProcessDto>();
+
+                // Xử lý dữ liệu nhập liệu
+                foreach (var unitEntry in Data)
                 {
-                    int fishTypeId = fishEntry.Key;
-                    decimal totalQuantityProcessed = fishEntry.Value;
+                    int unitId = unitEntry.Key;
+                    var fishMap = unitEntry.Value;
 
-                    if (totalQuantityProcessed <= 0) continue;
-
-                    // TRA CỨU GIÁ TỪ DICTIONARY (Không gọi DB ở đây nữa)
-                    if (fishPriceDict.TryGetValue(fishTypeId, out decimal pricePerUnit))
+                    foreach (var fishEntry in fishMap)
                     {
-                        // --- CODE KIỂM TRA ---
-                        // In thẳng giá ra màn hình web để bạn nhìn thấy
-                        if (pricePerUnit == 0)
+                        int fishTypeId = fishEntry.Key;
+                        decimal totalQuantityProcessed = fishEntry.Value;
+
+                        if (totalQuantityProcessed <= 0) continue;
+
+                        // TRA CỨU GIÁ TỪ DICTIONARY (Không gọi DB ở đây nữa)
+                        if (fishPriceDict.TryGetValue(fishTypeId, out decimal pricePerUnit))
                         {
-                            ModelState.AddModelError("", $"LỖI: Cá ID {fishTypeId} đang có giá là 0 đồng!");
-                            return Page(); // Dừng lại để bạn đọc lỗi
+                            // --- CODE KIỂM TRA ---
+                            // In thẳng giá ra màn hình web để bạn nhìn thấy
+                            if (pricePerUnit == 0)
+                            {
+                                ModelState.AddModelError("", $"LỖI: Cá ID {fishTypeId} đang có giá là 0 đồng!");
+                                return Page(); // Dừng lại để bạn đọc lỗi
+                            }
+                            // ---------------------
+
+                            decimal salaryPayment = pricePerUnit * totalQuantityProcessed;
+
+                            var dto = new SalaryProcessDto
+                            {
+                                Date = DateOnly.FromDateTime(ProcessDate),
+                                FishTypeId = fishTypeId,
+                                UnitId = unitId,
+                                PricePerKg = pricePerUnit,
+                                TotalQuantityProcessed = totalQuantityProcessed,
+                                SalaryPayment = salaryPayment,
+                                Notes = NoteOption,
+
+                            };
+                            Console.WriteLine("-----------------XXXXXXXXXXXXXXXXXXXXXXXXXXXXX-----------------------------------------------------------------");
+                            Console.WriteLine($"DEBUG: Cá ID {fishTypeId}, Giá {pricePerUnit}, SL {totalQuantityProcessed}, Thành tiền); {salaryPayment}");
+
+                            salaryProcessesList.Add(dto);
                         }
-                        // ---------------------
 
-                        decimal salaryPayment = pricePerUnit * totalQuantityProcessed;
-
-                        var dto = new SalaryProcessDto
-                        {
-                            Date = DateOnly.FromDateTime(ProcessDate),
-                            FishTypeId = fishTypeId,
-                            UnitId = unitId,
-                            TotalQuantityProcessed = totalQuantityProcessed,
-                            SalaryPayment = salaryPayment, 
-                            Notes = NoteOption
-                        };
-                        Console.WriteLine("-----------------XXXXXXXXXXXXXXXXXXXXXXXXXXXXX-----------------------------------------------------------------");
-                        Console.WriteLine($"DEBUG: Cá ID {fishTypeId}, Giá {pricePerUnit}, SL {totalQuantityProcessed}, Thành tiền); {salaryPayment}");
-
-                        salaryProcessesList.Add(dto);
                     }
                 }
+
+                // Gửi dữ liệu xuống Service
+                if (salaryProcessesList.Any())
+                {
+                    await _salaryService.CreateSalaryProcessesByList(salaryProcessesList);
+
+                    return RedirectToPage("/Features/Receipt");
+                }
+                else
+                {
+                    foreach (var key in ModelState.Keys)
+                    {
+                        ModelState[key].Errors.Clear();
+                    }
+
+                    ModelState.AddModelError("", "Không thể lưu do chưa nhập số lượng");
+
+                    return Page();
+                }
             }
-
-            // Gửi dữ liệu xuống Service
-            if (salaryProcessesList.Any())
+            catch (ArgumentException ex)
             {
-                await _salaryService.CreateSalaryProcessesByList(salaryProcessesList);
-
-                SuccessMessage = "Đã lưu thành công";
-
-               
-               return RedirectToPage("/Features/Receipt");
-            }
-            else
-            {
-                // Dùng TempData để lưu tin nhắn, nó sẽ tồn tại qua 1 lần Redirect
-                TempData["ErrorMessage"] = "Không thể lưu do chưa nhập số lượng";
-
-                // Không cần gọi await OnGetAsync(); vì bạn sắp chuyển đi trang khác rồi
-                return RedirectToPage("/Features/ProcessingSetupModel");
+                ModelState.AddModelError(string.Empty, ex.Message);
+                return Page();
             }
         }
     }

@@ -16,9 +16,12 @@ public static class SalaryProcessMappingExtension
             UnitId= entity.ProcessingUnitId,
             UnitName = entity.ProcessingUnit?.UnitName,
             FishTypeName = entity.FishType?.Name,
+            PricePerKg = entity.PricePerKg,
             SalaryPayment = entity.SalaryPayment,
             TotalQuantityProcessed= entity.TotalQuantityProcessed,
-            Notes= entity.Notes
+            Notes= entity.Notes,
+            Status = entity.Status
+            
         };
     }
     
@@ -34,7 +37,9 @@ public static class SalaryProcessMappingExtension
             ProcessingUnitId= dto.UnitId,
             TotalQuantityProcessed= dto.TotalQuantityProcessed,
             SalaryPayment= dto.SalaryPayment,
-            Notes= dto.Notes
+            PricePerKg= dto.PricePerKg,
+            Notes= dto.Notes,
+            Status = dto.Status
         };
     }
 }
