@@ -11,12 +11,11 @@ public class FishPrice
     public int PriceId { get; set; } // - Auto Increment
 
     public decimal PricePerUnit { get; set; }
-    public string? UnitOfMeasure {get;set;} ="Kilogram";
-    public DateTime EffectiveDate { get; set; }
+    public string? UnitOfMeasure {get;set;} = "Kilogram";
+    public DateTime EffectiveDate { get; set; } = DateTime.Now;
 
 
     [Required]
     public int FishTypeId { get; set; }
 
-    public virtual FishType? FishType { get; set; }
 }

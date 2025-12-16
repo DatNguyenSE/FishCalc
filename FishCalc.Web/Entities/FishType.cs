@@ -14,8 +14,8 @@ public class FishType
 
 
     // -----------Nav property
-    public FishPrice? FishPrice {get;set;} =null!;
-
+    //1-N vì một loại cá có thể có nhiều giá khác nhau theo thời gian
+    public virtual ICollection<FishPrice> FishPrices { get; set; } = new List<FishPrice>();
 }
 
 

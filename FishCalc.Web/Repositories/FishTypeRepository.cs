@@ -7,74 +7,72 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FishCalc.Web.Repositories;
 
-public class FishTypeRepository(AppDbContext context) : IFishTypeRepository
+public class FishTypeRepository(AppDbContext _context) : IFishTypeRepository
 {
     public async Task Create(FishType fish)
     {
-        context.FishTypes.Add(fish);
-        await context.SaveChangesAsync();
+        var initPrice = new FishPrice
+        {
+            UnitOfMeasure = "Kilogram",
+            PricePerUnit = 0,
+            EffectiveDate = DateTime.Now,
+            FishTypeId = fish.Id
+        };
+        fish.FishPrices.Add(initPrice);
+
+        _context.FishTypes.Add(fish);
+        await _context.SaveChangesAsync();
 
     }
 
-    public async Task  Delete(int id)
+    public async Task Delete(int id)
     {
-        var fish = await context.FishTypes.FindAsync(id);
+        var fish = await _context.FishTypes.FindAsync(id);
         if (fish == null)
         {
             return;
         }
-       context.FishTypes.Remove(fish);
-        await context.SaveChangesAsync();
-
+        await _context.FishTypes.Where(f => f.Id == id ).ExecuteDeleteAsync();
+        await _context.SaveChangesAsync();
     }
 
     public async Task<FishType?> GetFishTypeByIdAsync(int? id)
     {
-       return await context.FishTypes.Include(x => x.FishPrice)
-            .SingleOrDefaultAsync(x => x.Id == id);
+       return await _context.FishTypes.Include(x => x.FishPrices.OrderByDescending(fp => fp.EffectiveDate)) 
+            .FirstOrDefaultAsync(x => x.Id == id);
     }
 
     public async Task<IReadOnlyList<FishType>> GetFishTypesAsync()
     {
-        return await context.FishTypes.Include(x => x.FishPrice).ToListAsync();
+        return await _context.FishTypes.Include(x => x.FishPrices.OrderByDescending(fp => fp.EffectiveDate).Take(1))
+            .ToListAsync();
     }
 
     public async Task<IReadOnlyList<FishType>> GetListFishTypeByIdAsync(List<int> ids)
     {
-        return await context.FishTypes.Include(x => x.FishPrice).Where(x => ids.Contains(x.Id)).ToListAsync();
+        return await _context.FishTypes.Include(x => x.FishPrices.OrderByDescending(fp => fp.EffectiveDate).Take(1)).Where(x => ids.Contains(x.Id)).ToListAsync();
            
     }
 
     public async Task UpdateAsync(FishType fish)
     {
-        var existingFish = await context.FishTypes.FindAsync(fish.Id);
+        var existingFish = await _context.FishTypes.FindAsync(fish.Id);
     
     if (existingFish == null)
     {
         throw new Exception("Không tìm thấy loại cá này!");
     }
-        existingFish.FishPrice.PricePerUnit = fish.FishPrice.PricePerUnit;
-        existingFish.FishPrice.PricePerUnit = fish.FishPrice.PricePerUnit;
-
-        var currentPrice = await context.FishPrices
-            .FirstOrDefaultAsync(fp => fp.FishTypeId == fish.Id);
-        if (currentPrice != null)
-        {
-            currentPrice.PricePerUnit = fish.FishPrice.PricePerUnit;
-            // currentPrice.EffectiveDate = DateTime.Now; // Cập nhật ngày hiệu lực nếu cần
-        }
-        else
-        {
-            var newPrice = new FishPrice
-            {
-                FishTypeId = fish.Id,
-                PricePerUnit = fish.FishPrice.PricePerUnit,
-                // EffectiveDate = DateTime.Now
-            };
-        }
-        // vieet them ham priceFish
-        context.Entry(fish).State = EntityState.Modified;
-        await context.SaveChangesAsync();
+        
+        _context.Entry(fish).State = EntityState.Modified;
+        await _context.SaveChangesAsync();
 
     }
+
+    public async Task UpdatePriceByIdAsync(int id, FishPrice fishPrice)
+    {
+       var fish = await _context.FishTypes.FirstAsync(x => x.Id == id) ?? throw new Exception("Không tìm thấy loại cá này!");
+        fish.FishPrices.Add(fishPrice);
+        await _context.SaveChangesAsync();
+    }
+
 }
