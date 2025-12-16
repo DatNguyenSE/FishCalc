@@ -10,7 +10,6 @@ public class FishType
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
     public required string Name { get; set; }
-    public string? UnitOfMeasure {get;set;} ="Kilogram";
     public string? ImgFishUrl { get; set; } 
 
 

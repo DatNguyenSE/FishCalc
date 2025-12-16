@@ -56,7 +56,7 @@ namespace FishCalc.Web.Pages.Features
                     {
                         FishName = item.FishTypeName ,
                         Quantity = item.TotalQuantityProcessed,
-                        PricePerKg = item.PricePerKg,
+                        PricePerUnit = item.PricePerUnit,
                         TotalPrice = item.SalaryPayment,
                         Notes = item.Notes,
                         

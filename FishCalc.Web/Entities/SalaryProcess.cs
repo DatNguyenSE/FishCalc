@@ -21,7 +21,7 @@ public class SalaryProcess
     public int ProcessingUnitId { get; set; }
     
     [Required]
-    public decimal PricePerKg { get; set; }
+    public decimal PricePerUnit { get; set; }
 
     [Required]
     public decimal TotalQuantityProcessed { get; set; }  // decimal để tính chính xác hơn

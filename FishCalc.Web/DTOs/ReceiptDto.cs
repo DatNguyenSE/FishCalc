@@ -25,5 +25,5 @@ namespace FishCalc.Web.DTOs;
         public decimal TotalPrice { get; set; } 
         public string? Notes { get; set; }
 
-        public decimal PricePerKg { get; set; }
+        public decimal PricePerUnit { get; set; }
     }

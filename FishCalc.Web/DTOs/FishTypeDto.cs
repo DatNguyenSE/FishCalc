@@ -8,7 +8,7 @@ namespace FishCalc.Web.DTOs
         
         public string? ImgFishUrl { get; set; }
 
-        public decimal PricePerUnitOfMeasure { get; set; }
+        public decimal PricePerUnit { get; set; }
         
     }
 }

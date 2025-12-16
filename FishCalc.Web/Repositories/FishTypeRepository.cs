@@ -47,7 +47,34 @@ public class FishTypeRepository(AppDbContext context) : IFishTypeRepository
 
     public async Task UpdateAsync(FishType fish)
     {
+        var existingFish = await context.FishTypes.FindAsync(fish.Id);
+    
+    if (existingFish == null)
+    {
+        throw new Exception("Không tìm thấy loại cá này!");
+    }
+        existingFish.FishPrice.PricePerUnit = fish.FishPrice.PricePerUnit;
+        existingFish.FishPrice.PricePerUnit = fish.FishPrice.PricePerUnit;
+
+        var currentPrice = await context.FishPrices
+            .FirstOrDefaultAsync(fp => fp.FishTypeId == fish.Id);
+        if (currentPrice != null)
+        {
+            currentPrice.PricePerUnit = fish.FishPrice.PricePerUnit;
+            // currentPrice.EffectiveDate = DateTime.Now; // Cập nhật ngày hiệu lực nếu cần
+        }
+        else
+        {
+            var newPrice = new FishPrice
+            {
+                FishTypeId = fish.Id,
+                PricePerUnit = fish.FishPrice.PricePerUnit,
+                // EffectiveDate = DateTime.Now
+            };
+        }
+        // vieet them ham priceFish
         context.Entry(fish).State = EntityState.Modified;
         await context.SaveChangesAsync();
+
     }
 }

@@ -84,7 +84,7 @@ else{
                                 <div class="flex justify-between items-center">
                                     <div>
                                         <div class="font-semibold text-slate-700 text-xs">@fish.Name</div>
-                                        <div class="text-[10px] text-slate-400">@fish.PricePerUnitOfMeasure.ToString("#,##0", culture) /kg</div>
+                                        <div class="text-[10px] text-slate-400">@fish.PricePerUnit.ToString("#,##0", culture) /kg</div>
                                     </div>
                                 </div>
                             </td>
@@ -96,7 +96,7 @@ else{
                                 <div class="relative">
                                     <input type="number" name="@inputName"
                                         class="salary-input w-full text-right font-mono text-xs py-1.5 px-2 bg-transparent border border-transparent rounded hover:bg-white hover:border-gray-300 focus:bg-white focus:border-sky-500 focus:ring-1 focus:ring-sky-100 transition-all placeholder-gray-300"
-                                        placeholder="0" min="0" step="0.01" data-price="@fish.PricePerUnitOfMeasure"
+                                        placeholder="0" min="0" step="0.01" data-price="@fish.PricePerUnit"
                                         data-unit-id="@unit.UnitId" />
                                     <div
                                         class="cell-total h-3 text-[9px] text-right text-gray-400 px-2 font-medium opacity-0 group-hover:opacity-100 transition-opacity">

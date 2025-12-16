@@ -13,9 +13,8 @@ public static class FishTypeMappingExtension
         {
             Id = entity.Id,
             Name = entity.Name,
-            UnitOfMeasure = entity.UnitOfMeasure ?? string.Empty,
             ImgFishUrl = entity.ImgFishUrl,
-            PricePerUnitOfMeasure = entity.FishPrice?.PricePerUnitOfMeasure ?? 0
+            PricePerUnit = entity.FishPrice?.PricePerUnit ?? 0
         };
     }
 
@@ -26,7 +25,6 @@ public static class FishTypeMappingExtension
         {
             Id = dto.Id,
             Name = dto.Name,
-            UnitOfMeasure = dto.UnitOfMeasure ?? string.Empty,
             ImgFishUrl = dto.ImgFishUrl
         };
     }

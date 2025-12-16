@@ -89,7 +89,7 @@ namespace FishCalc.Web.Pages.Features
                 var fishList = await _fishTypeService.GetListFishTypeByIdAsync(allFishIds);
 
                 // B3: Tạo Dictionary (Key: FishId, Value: Price)
-                var fishPriceDict = fishList.ToDictionary(f => f.Id, f => f.PricePerUnitOfMeasure);
+                var fishPriceDict = fishList.ToDictionary(f => f.Id, f => f.PricePerUnit);
 
                 var salaryProcessesList = new List<SalaryProcessDto>();
 
@@ -125,7 +125,7 @@ namespace FishCalc.Web.Pages.Features
                                 Date = DateOnly.FromDateTime(ProcessDate),
                                 FishTypeId = fishTypeId,
                                 UnitId = unitId,
-                                PricePerKg = pricePerUnit,
+                                PricePerUnit = pricePerUnit,
                                 TotalQuantityProcessed = totalQuantityProcessed,
                                 SalaryPayment = salaryPayment,
                                 Notes = NoteOption,

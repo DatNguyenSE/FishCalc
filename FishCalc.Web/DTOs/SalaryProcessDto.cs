@@ -8,9 +8,8 @@ namespace FishCalc.Web.DTOs
         public DateOnly Date { get; set; }
         public int UnitId { get; set; }
         public int FishTypeId { get; set; }
-        public decimal PricePerKg { get; set; }
+        public decimal PricePerUnit { get; set; }
         
-        // Dữ liệu quan trọng
         public decimal TotalQuantityProcessed { get; set; } 
         public decimal SalaryPayment { get; set; }          
         public string? Notes { get; set; }

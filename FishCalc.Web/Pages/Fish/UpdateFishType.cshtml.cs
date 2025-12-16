@@ -22,5 +22,14 @@ namespace FishCalc.Web.Pages.Fish
             }
             return Page();
         }
+        public IActionResult OnPost()
+        {
+            if(!ModelState.IsValid)
+            {
+                return Page();
+            }
+            fishTypeService.UpdateFishTypeAsync(FishType);
+            return RedirectToPage("./FishTypes");
+        }
     }
 }
