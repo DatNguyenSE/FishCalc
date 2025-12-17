@@ -4,11 +4,9 @@ namespace FishCalc.Web.DTOs
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;
-        public string UnitOfMeasure { get; set; } = "Kilogram";
-        
         public string? ImgFishUrl { get; set; }
 
         public decimal PricePerUnit { get; set; }
-        
+        public string UnitOfMeasure { get; set; } = "Kilogram";
     }
 }

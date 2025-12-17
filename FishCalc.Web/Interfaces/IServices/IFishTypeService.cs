@@ -14,5 +14,7 @@ public interface IFishTypeService
     // Commands
     Task CreateFishTypeAsync(FishTypeDto dto);
     Task UpdateFishTypeAsync(FishTypeDto dto);
+    Task UpdatePriceByIdAsync(int id, FishPriceDto fishPrice);
+
     Task DeleteFishTypeAsync(int id);
 }

@@ -2,7 +2,7 @@ using System;
 using FishCalc.Web.DTOs;
 using FishCalc.Web.Interfaces.IRepositories;
 using FishCalc.Web.Interfaces.IServices;
-using FishCalc.Web.Extensions;
+using FishCalc.Web.My.Extensions;
 
 namespace FishCalc.Web.Services;
 

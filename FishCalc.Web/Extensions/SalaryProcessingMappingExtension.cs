@@ -2,7 +2,8 @@ using System;
 using FishCalc.Web.DTOs;
 using FishCalc.Web.Entities;
 
-namespace FishCalc.Web.Extensions;
+namespace FishCalc.Web.My.Extensions;
+
 
 public static class SalaryProcessMappingExtension
 {

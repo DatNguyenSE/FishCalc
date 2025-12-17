@@ -1,7 +1,7 @@
 using FishCalc.Web.DTOs;
 using FishCalc.Web.Entities;
 
-namespace FishCalc.Web.Extensions;
+namespace FishCalc.Web.My.Extensions;
 
 // Lớp tĩnh chứa các extension method
 public static class FishTypeMappingExtension
@@ -16,11 +16,9 @@ public static class FishTypeMappingExtension
                 Id = entity.Id,
                 Name = entity.Name,
                 ImgFishUrl = entity.ImgFishUrl,
-                UnitOfMeasure = "Kilogram", 
+                UnitOfMeasure = entity.FishPrices?.First()?.UnitOfMeasure ?? "Kilogram",
 
-                PricePerUnit = entity.FishPrices?
-                    .OrderByDescending(fp => fp.EffectiveDate) 
-                    .FirstOrDefault()?.PricePerUnit ?? 0
+                PricePerUnit = entity.FishPrices?.First()?.PricePerUnit ?? 999
             };
         }
 
@@ -31,7 +29,7 @@ public static class FishTypeMappingExtension
 
             var entity = new FishType
             {
-
+                Id = dto.Id,
                 Name = dto.Name,
                 ImgFishUrl = dto.ImgFishUrl
             
@@ -43,7 +41,7 @@ public static class FishTypeMappingExtension
                 {
                     PricePerUnit = dto.PricePerUnit,
                     EffectiveDate = DateTime.Now, 
-                    UnitOfMeasure = "Kilogram"
+                    UnitOfMeasure = dto.UnitOfMeasure
                 });
             }
 
