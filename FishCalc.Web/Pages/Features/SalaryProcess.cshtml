@@ -3,220 +3,140 @@
 @using System.Globalization
 
 @{
-ViewData["Title"] = "Phân Bổ Lương";
-var culture = new CultureInfo("vi-VN");
+    ViewData["Title"] = "Phân Bổ Lương";
+    var culture = new CultureInfo("vi-VN");
 }
 
+<!-- External Libs -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <link rel="stylesheet" href="https://npmcdn.com/flatpickr/dist/themes/airbnb.css">
 
 <style>
-    /* --- CẤU TRÚC CHÍNH --- */
+    /* --- CSS Custom cho Table Logic (Khó thay thế hoàn toàn bằng Tailwind) --- */
     :root {
-        --grid-border: #e2e8f0;
-        --header-bg: #f8fafc;
-        --focus-color: #e0f2fe;
-        /* Màu xanh nhạt khi highlight */
-        --input-focus-border: #0ea5e9;
+        --grid-border: #e2e8f0; /* slate-200 */
+        --header-bg: #f8fafc;   /* slate-50 */
+        --focus-bg: #f0f9ff;    /* sky-50 */
+        --focus-border: #0ea5e9; /* sky-500 */
     }
 
-    .table-wrapper {
-        position: relative;
-        max-height: calc(100vh - 220px);
-        /* Tối ưu diện tích màn hình */
-        overflow: auto;
-        border: 1px solid var(--grid-border);
-        border-radius: 8px;
-        background: white;
-        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-    }
-
-    /* Tùy chỉnh thanh cuộn cho gọn */
-    .table-wrapper::-webkit-scrollbar {
+    /* Scrollbar tinh tế */
+    .custom-scrollbar::-webkit-scrollbar {
         width: 8px;
         height: 8px;
     }
-
-    .table-wrapper::-webkit-scrollbar-track {
+    .custom-scrollbar::-webkit-scrollbar-track {
         background: transparent;
     }
-
-    .table-wrapper::-webkit-scrollbar-thumb {
+    .custom-scrollbar::-webkit-scrollbar-thumb {
         background: #cbd5e1;
         border-radius: 4px;
     }
-
-    .table-wrapper::-webkit-scrollbar-thumb:hover {
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
         background: #94a3b8;
     }
 
-    /* --- TABLE STYLING --- */
-    #salaryTable {
+    /* Cấu trúc bảng */
+    .salary-table {
         border-collapse: separate;
-        /* Bắt buộc cho sticky */
         border-spacing: 0;
-        width: max-content;
-        min-width: 100%;
-        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-        /* Font số đẹp */
+        width: 100%;
     }
 
-    /* Các ô cơ bản */
-    #salaryTable th,
-    #salaryTable td {
-        border-right: 1px solid transparent;
-        /* Ẩn viền dọc mặc định cho thoáng */
-        border-bottom: 1px solid var(--grid-border);
-        padding: 0;
-        /* Padding xử lý trong input */
-    }
-
-    #salaryTable th {
+    .salary-table th,
+    .salary-table td {
         border-right: 1px solid var(--grid-border);
-        /* Header cần viền */
+        border-bottom: 1px solid var(--grid-border);
     }
-
-    /* --- STICKY HEADER & COLUMNS (Z-INDEX LAYERING) --- */
-    /* Layer 1: Nội dung thường (z-index: auto) */
-
-    /* Layer 2: Cột đầu tiên (Tên cá) */
-    #salaryTable tbody td:first-child,
-    #salaryTable tfoot td:first-child {
-        position: sticky;
-        left: 0;
-        background: white;
-        z-index: 20;
-        border-right: 2px solid var(--grid-border);
-        /* Viền đậm ngăn cách */
-        padding: 8px 12px;
+    
+    /* Bỏ border bên phải của cột cuối cùng để giao diện liền mạch */
+    .salary-table th:last-child,
+    .salary-table td:last-child {
+        border-right: none;
     }
-
-    /* Layer 3: Header (Tên tổ) & Footer (Tổng) */
-    #salaryTable thead th {
+    
+    /* Sticky Headers & Columns */
+    .salary-table thead th {
         position: sticky;
         top: 0;
-        background: var(--header-bg);
         z-index: 30;
-        padding: 10px;
-        font-weight: 600;
-        color: #475569;
-        text-transform: uppercase;
-        font-size: 0.75rem;
-        letter-spacing: 0.05em;
+        background: var(--header-bg);
     }
 
-    #salaryTable tfoot td {
+    .salary-table tbody td:first-child,
+    .salary-table tfoot td:first-child,
+    .salary-table thead th:first-child {
+        position: sticky;
+        left: 0;
+        z-index: 40; /* Cao hơn header thường */
+        background: white;
+        border-right: 2px solid var(--grid-border); /* Border đậm ngăn cách cột cố định */
+    }
+    
+    .salary-table thead th:first-child {
+        z-index: 50; /* Góc trên cùng bên trái - cao nhất */
+        background: var(--header-bg);
+    }
+
+    .salary-table tfoot td {
         position: sticky;
         bottom: 0;
-        background: #f1f5f9;
         z-index: 30;
+        background: #f1f5f9; /* slate-100 */
         border-top: 2px solid var(--grid-border);
         font-weight: 700;
-        color: #334155;
+    }
+    
+    .salary-table tfoot td:first-child {
+        z-index: 50;
     }
 
-    /* Layer 4: Giao điểm (Góc trên trái, Góc dưới trái) - Cao nhất */
-    #salaryTable thead th:first-child {
-        position: sticky;
-        left: 0;
-        top: 0;
-        z-index: 40;
-        background: var(--header-bg);
-        border-right: 2px solid var(--grid-border);
-    }
-
-    #salaryTable tfoot td:first-child {
-        z-index: 40;
-        background: #f1f5f9;
-    }
-
-    /* --- INPUT STYLING (THE EXCEL FEEL) --- */
-    .salary-input {
+    /* Input Styling - Excel like */
+    .cell-input {
         width: 100%;
         height: 100%;
-        padding: 10px 8px;
+        padding: 12px 16px;
         border: 2px solid transparent;
-        /* Ẩn viền khi bình thường */
         background: transparent;
         text-align: right;
-        font-size: 13px;
-        color: #0f172a;
-        transition: all 0.1s;
-        border-radius: 0;
-    }
-
-    .salary-input:hover {
-        background-color: #f8fafc;
-        cursor: text;
-    }
-
-    .salary-input:focus {
+        font-variant-numeric: tabular-nums;
+        transition: all 0.15s ease;
         outline: none;
-        background-color: white;
-        border-color: var(--input-focus-border);
-        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
-        z-index: 5;
-        /* Nổi lên trên highlight nền */
-        font-weight: 600;
     }
 
-    /* Placeholder mờ cho dễ nhìn */
-    .salary-input::placeholder {
-        color: #cbd5e1;
-        font-weight: normal;
+    .cell-input:focus {
+        background: white;
+        border-color: var(--focus-border);
+        box-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+        z-index: 10;
+        position: relative;
     }
 
-    /* Hiển thị số tiền nhỏ bên dưới input */
+    /* Highlight Active Row/Col */
+    .row-active td { background-color: #f8fafc; }
+    .col-active { background-color: #f8fafc !important; }
+    .row-active td.col-active { background-color: var(--focus-bg) !important; }
+
+    /* Sub-total Hint */
     .sub-total-hint {
         position: absolute;
         bottom: 2px;
-        right: 4px;
-        font-size: 9px;
+        left: 4px; /* Chuyển qua trái cho dễ nhìn */
+        font-size: 0.65rem;
         color: #0ea5e9;
         font-weight: 600;
         pointer-events: none;
         opacity: 0;
         transition: opacity 0.2s;
     }
-
     .cell-wrapper:focus-within .sub-total-hint,
-    .sub-total-hint.has-value {
-        opacity: 1;
-    }
-
-    /* --- HIGHLIGHTING LOGIC --- */
-    .cell-wrapper {
-        position: relative;
-        height: 100%;
-    }
-
-    /* Crosshair Highlight (Hàng & Cột sáng lên khi focus) */
-    .row-active td {
-        background-color: #f8fafc;
-    }
-
-    /* Màu nền hàng nhẹ */
-    .col-active {
-        background-color: #f8fafc !important;
-    }
-
-    /* Màu nền cột nhẹ */
-
-    /* Ô giao nhau đậm hơn */
-    .row-active td.col-active {
-        background-color: var(--focus-color) !important;
-    }
+    .sub-total-hint.has-value { opacity: 1; }
 </style>
-@if (!ModelState.IsValid)
-{
-<div class="mb-4 p-4 text-sm text-red-800 rounded-lg bg-red-50 border border-red-200" role="alert">
-    <span class="font-medium">Lỗi:</span>
-    <div asp-validation-summary="All" class="list-disc pl-5"></div>
-</div>
-}
-<div class="container mx-auto h-screen flex flex-col">
-    <form method="post" asp-page-handler="ProcessData" class="flex flex-col h-full">
 
+<div class="min-h-screen bg-slate-50 pb-20 font-sans text-slate-800">
+    <form method="post" asp-page-handler="ProcessData" class="flex flex-col h-full max-w-[1400px] mx-auto p-4 md:p-6">
+        
+        <!-- Header Section -->
         <div
             class="grid grid-cols-1 md:grid-cols-3 items-center mb-4 bg-white p-4 rounded-2xl border border-slate-100 shadow-sm gap-4">
 
@@ -241,63 +161,92 @@ var culture = new CultureInfo("vi-VN");
             </div>
         </div>
 
-        <div class="table-wrapper flex-grow">
-            <table id="salaryTable">
-                <thead>
-                    <tr>
-                        <th class="min-w-[200px] text-left">
-                            <span class="block text-slate-400 text-[10px] font-normal">LOẠI CÁ</span>
-                        </th>
-                        @foreach (var u in Model.SelectedProcessingUnits)
-                        {
-                        <th data-col-idx="@u.UnitId" class="min-w-[100px] text-center">@u.UnitName</th>
-                        }
-                    </tr>
-                </thead>
+        @if (!ModelState.IsValid)
+        {
+            <div class="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 flex items-start gap-3 animate-pulse">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-600 mt-0.5"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+                <div class="text-sm text-red-800">
+                    <h3 class="font-bold mb-1">Vui lòng kiểm tra lại:</h3>
+                    <div asp-validation-summary="All" class="list-disc list-inside"></div>
+                </div>
+            </div>
+        }
 
-                <tbody>
-                    @foreach (var fish in Model.SelectedFishTypes)
-                    {
-                    <tr class="group">
-                        <td class="align-middle">
-                            <div class="flex flex-col justify-center h-full">
-                                <span
-                                    class="text-sm font-bold text-slate-700 group-hover:text-sky-600 transition-colors">@fish.Name</span>
-                                <span
-                                    class="text-[11px] text-slate-400 font-mono mt-0.5">@fish.PricePerUnit.ToString("#,##0",
-                                    culture)</span>
-                            </div>
-                        </td>
+        <!-- Main Content Area: Grid -->
+        <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden flex flex-col mb-6">
+            <!-- Table Wrapper -->
+            <!-- max-h-[65vh] để đảm bảo scroll trên màn hình nhỏ nhưng không quá dài trên màn to -->
+<div class="overflow-x-auto custom-scrollbar w-full bg-white relative">                <table class="salary-table w-full text-left">
+                    <thead class="bg-slate-50 text-slate-500 uppercase text-xs font-semibold tracking-wider">
+                        <tr>
+                            <th class="py-3 px-4 min-w-[220px]">
+                                Loại Cá / Tổ
+                            </th>
+                            @foreach (var u in Model.SelectedProcessingUnits)
+                            {
+                                <th data-col-idx="@u.UnitId" class="py-3 px-2 min-w-[120px] text-center">
+                                    <div class="flex flex-col items-center">
+                                        <span class="text-slate-700 font-bold">@u.UnitName</span>
+                                    </div>
+                                </th>
+                            }
+                        </tr>
+                    </thead>
 
-                        @foreach (var u in Model.SelectedProcessingUnits)
+                    <tbody class="divide-y divide-slate-100 text-sm text-slate-700">
+                        @foreach (var fish in Model.SelectedFishTypes)
                         {
-                        <td data-col-idx="@u.UnitId" class="p-0 relative">
-                            <div class="cell-wrapper">
-                                <input type="text" inputmode="decimal" name="Data[@u.UnitId][@fish.Id]"
-                                    class="salary-input js-calc-trigger" data-price="@fish.PricePerUnit"
-                                    data-unit-id="@u.UnitId" placeholder="-" autocomplete="off" />
-                                <div class="sub-total-hint"></div>
-                            </div>
-                        </td>
-                        }
-                    </tr>
-                    }
-                </tbody>
+                            <tr class="group hover:bg-slate-50 transition-colors">
+                                <!-- Cột Loại cá Sticky -->
+                                <td class="py-3 px-4 align-middle group-hover:bg-slate-50">
+                                    <div class="flex flex-col">
+                                        <span class="font-bold text-slate-700 text-sm">@fish.Name</span>
+                                        <span class="font-mono text-xs text-blue-600 bg-blue-50 w-fit px-1.5 py-0.5 rounded mt-1">
+                                            @fish.PricePerUnit.ToString("#,##0", culture).000₫
+                                        </span>
+                                    </div>
+                                </td>
 
-                <tfoot>
-                    <tr>
-                        <td class="text-right uppercase text-xs tracking-wider">Tổng Đơn Vị</td>
-                        @foreach (var u in Model.SelectedProcessingUnits)
-                        {
-                        <td data-col-idx="@u.UnitId" class="text-right px-2 py-3">
-                            <span id="total-unit-@u.UnitId" class="unit-total-display block text-sm font-mono">0</span>
-                        </td>
+                                <!-- Các cột Input -->
+                                @foreach (var u in Model.SelectedProcessingUnits)
+                                {
+                                    <td data-col-idx="@u.UnitId" class="p-0 relative h-14">
+                                        <div class="cell-wrapper w-full h-full relative">
+                                            <input type="text" inputmode="decimal" 
+                                                   name="Data[@u.UnitId][@fish.Id]"
+                                                   class="cell-input js-calc-trigger placeholder:text-slate-200"
+                                                   data-price="@fish.PricePerUnit"
+                                                   data-unit-id="@u.UnitId" 
+                                                   placeholder="-" 
+                                                   autocomplete="off" 
+                                                   value="@(Model.Data.ContainsKey(u.UnitId) && Model.Data[u.UnitId].ContainsKey(fish.Id) ? Model.Data[u.UnitId][fish.Id]?.ToString() : "")" />
+                                            <div class="sub-total-hint font-mono"></div>
+                                        </div>
+                                    </td>
+                                }
+                            </tr>
                         }
-                    </tr>
-                </tfoot>
-            </table>
+                    </tbody>
+
+                    <!-- Footer Tổng -->
+                    <tfoot class="bg-slate-100 text-slate-700 text-sm font-bold">
+                        <tr>
+                            <td class="py-4 px-4 text-right uppercase text-xs tracking-wider text-slate-500">
+                                Tổng Sản Lượng (Kg)
+                            </td>
+                            @foreach (var u in Model.SelectedProcessingUnits)
+                            {
+                                <td data-col-idx="@u.UnitId" class="py-3 px-4 text-right">
+                                    <span id="total-unit-@u.UnitId" class="unit-total-display block font-mono text-blue-600">0</span>
+                                </td>
+                            }
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
         </div>
 
+        <!-- Footer Control Bar -->
         <div
             class="mt-4 sticky w-[calc(90vw-3rem)] grid grid-cols-1 md:grid-cols-3 items-center bg-slate-800 text-white p-4 rounded-xl shadow-lg gap-4">
 
@@ -347,58 +296,37 @@ var culture = new CultureInfo("vi-VN");
                     placeholder="Nhập ghi chú chi tiết cho bảng tính này (nếu có)..."></textarea>
             </div>
         </div>
+
     </form>
-    <div id="confirm-modal" class="fixed inset-0 z-[100] hidden" aria-labelledby="modal-title" role="dialog"
-        aria-modal="true">
+</div>
 
-        <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity"></div>
-
-        <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
-            <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
-
-                <div
-                    class="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-md border border-slate-100">
-
-                    <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-                        <div class="sm:flex sm:items-start">
-                            <div
-                                class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-sky-100 sm:mx-0 sm:h-10 sm:w-10">
-                                <svg class="h-6 w-6 text-sky-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                    stroke="currentColor" aria-hidden="true">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
-                                </svg>
-                            </div>
-
-                            <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                                <h3 class="text-lg font-semibold leading-6 text-slate-900" id="modal-title">Xác nhận lưu
-                                    dữ liệu</h3>
-                                <div class="mt-2">
-                                    <p class="text-sm text-slate-500">
-                                        Bạn có chắc chắn muốn lưu bảng tính lương cho ngày:
-                                    </p>
-                                    <p class="text-2xl font-bold text-sky-600 mt-2 text-center border-y border-slate-100 py-2 bg-slate-50 rounded"
-                                        id="modal-date-display">
-                                        ...
-                                    </p>
-                                    <p class="text-xs text-slate-400 mt-2 italic">
-                                        *Vui lòng kiểm tra kỹ ngày tháng trước khi xác nhận.
-                                    </p>
+<!-- Modal Confirm -->
+<div id="confirm-modal" class="fixed inset-0 z-[100] hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity"></div>
+    <div class="fixed inset-0 z-10 overflow-y-auto">
+        <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+            <div class="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-sm border border-slate-100">
+                <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-50 sm:mx-0 sm:h-10 sm:w-10">
+                            <svg class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                            </svg>
+                        </div>
+                        <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left w-full">
+                            <h3 class="text-base font-semibold leading-6 text-slate-900" id="modal-title">Lưu Bảng Lương?</h3>
+                            <div class="mt-2">
+                                <p class="text-sm text-slate-500">Dữ liệu tính lương cho ngày:</p>
+                                <div class="mt-2 bg-slate-50 rounded-lg p-3 text-center border border-slate-100">
+                                    <span class="text-xl font-bold text-blue-600" id="modal-date-display">...</span>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <div class="bg-slate-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                        <button type="button" id="btn-confirm-save"
-                            class="inline-flex w-full justify-center rounded-lg bg-sky-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-500 sm:ml-3 sm:w-auto transition-colors">
-                            Đồng ý & Lưu
-                        </button>
-                        <button type="button" id="btn-cancel-save"
-                            class="mt-3 inline-flex w-full justify-center rounded-lg bg-white px-3 py-2 text-sm font-semibold text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 hover:bg-slate-50 sm:mt-0 sm:w-auto transition-colors">
-                            Hủy bỏ
-                        </button>
-                    </div>
+                </div>
+                <div class="bg-slate-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 gap-2">
+                    <button type="button" id="btn-confirm-save" class="inline-flex w-full justify-center rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:w-auto transition-colors">Đồng ý</button>
+                    <button type="button" id="btn-cancel-save" class="mt-3 inline-flex w-full justify-center rounded-lg bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm ring-1 ring-inset ring-slate-300 hover:bg-slate-50 sm:mt-0 sm:w-auto transition-colors">Hủy</button>
                 </div>
             </div>
         </div>
@@ -406,185 +334,196 @@ var culture = new CultureInfo("vi-VN");
 </div>
 
 @section Scripts {
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="https://npmcdn.com/flatpickr/dist/l10n/vn.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/vn.js"></script>
 
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const form = document.querySelector('form');
-        const table = document.getElementById('salaryTable');
-        const inputs = document.querySelectorAll('.js-calc-trigger');
-        const grandTotalEl = document.getElementById('grand-total');
-        const unitTotalNodes = new Map();
-        const moneyFormatter = new Intl.NumberFormat('vi-VN');
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Khởi tạo biến
+            const form = document.querySelector('form');
+            const table = document.querySelector('.salary-table');
+            const inputs = document.querySelectorAll('.js-calc-trigger');
+            const grandTotalEl = document.getElementById('grand-total');
+            const unitTotalNodes = new Map();
+            const moneyFormatter = new Intl.NumberFormat('vi-VN');
+            const unitSumMap = new Map();
+            let grandTotal = 0;
 
-        // --- Elements cho Modal ---
-        const saveBtn = document.querySelector('button[type="submit"]'); // Nút Lưu ở footer
-        const modal = document.getElementById('confirm-modal');
-        const btnConfirm = document.getElementById('btn-confirm-save');
-        const btnCancel = document.getElementById('btn-cancel-save');
-        const modalDateDisplay = document.getElementById('modal-date-display');
+            // Elements cho Modal
+            const saveBtn = document.querySelector('button[type="submit"]'); 
+            const modal = document.getElementById('confirm-modal');
+            const btnConfirm = document.getElementById('btn-confirm-save');
+            const btnCancel = document.getElementById('btn-cancel-save');
+            const modalDateDisplay = document.getElementById('modal-date-display');
 
-        // Khởi tạo Flatpickr và lưu instance vào biến
-        const datePickerInput = document.querySelector('.date-picker');
-        const fpInstance = flatpickr(datePickerInput, {
-            locale: 'vn',
-            dateFormat: 'Y-m-d',
-            altInput: true,
-            altFormat: 'd/m/Y', // Định dạng hiển thị tiếng Việt
-            defaultDate: 'today'
-        });
-
-        // --- XỬ LÝ MODAL CONFIRM ---
-
-        // 1. Khi bấm nút LƯU ở footer -> Chặn submit, hiện modal
-        saveBtn.addEventListener('click', (e) => {
-            e.preventDefault(); // Ngừng gửi form ngay lập tức
-
-            // Lấy ngày đang chọn từ Flatpickr để hiển thị
-            // fpInstance.selectedDates[0] là object Date javascript
-            let dateStr = "Chưa chọn ngày";
-            if (fpInstance.selectedDates.length > 0) {
-                dateStr = fpInstance.formatDate(fpInstance.selectedDates[0], "d/m/Y");
-            }
-
-            modalDateDisplay.textContent = dateStr;
-            modal.classList.remove('hidden'); // Hiện modal
-        });
-
-        // 2. Khi bấm nút HỦY trong modal
-        btnCancel.addEventListener('click', () => {
-            modal.classList.add('hidden'); // Ẩn modal
-        });
-
-        // 3. Khi bấm nút ĐỒNG Ý trong modal -> Submit form thật
-        btnConfirm.addEventListener('click', () => {
-            // Có thể thêm hiệu ứng loading ở đây nếu muốn
-            btnConfirm.textContent = "Đang lưu...";
-            btnConfirm.disabled = true;
-            form.submit();
-        });
-
-        // 4. Click ra ngoài vùng trắng cũng tắt modal (Optional)
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal.querySelector('.bg-slate-900\\/60') ||
-                e.target.closest('.w-screen') && !e.target.closest('.bg-white')) {
-                // Logic check click outside hơi phức tạp do cấu trúc nested, 
-                // nhưng nút Hủy là đủ an toàn rồi.
-            }
-        });
-
-
-        // --- LOGIC TÍNH TOÁN CŨ (GIỮ NGUYÊN) ---
-        const unitSumMap = new Map();
-        let grandTotal = 0;
-
-        document.querySelectorAll('.unit-total-display').forEach(el => {
-            unitTotalNodes.set(el.id.replace('total-unit-', ''), el);
-        });
-
-        inputs.forEach(input => {
-            const uid = input.dataset.unitId;
-            if (!unitSumMap.has(uid)) unitSumMap.set(uid, 0);
-            if (input.value && input.value != "0") {
-                calculateRow(input);
-            }
-        });
-
-        function calculateRow(input) {
-            const qty = parseFloat(input.value) || 0;
-            const price = parseFloat(input.dataset.price) || 0;
-            const total = qty * price;
-            const unitId = input.dataset.unitId;
-
-            const hintEl = input.nextElementSibling;
-            if (total > 0) {
-                hintEl.textContent = moneyFormatter.format(total);
-                hintEl.classList.add('has-value');
-            } else {
-                hintEl.textContent = '';
-                hintEl.classList.remove('has-value');
-            }
-            recalcUnitTotal(unitId);
-        }
-
-        function recalcUnitTotal(unitId) {
-            let sum = 0;
-            const unitInputs = document.querySelectorAll(`.js-calc-trigger[data-unit-id="${unitId}"]`);
-            unitInputs.forEach(inp => {
-                const q = parseFloat(inp.value) || 0;
-                const p = parseFloat(inp.dataset.price) || 0;
-                sum += (q * p);
-            });
-            unitSumMap.set(unitId, sum);
-            const node = unitTotalNodes.get(unitId);
-            if (node) {
-                node.textContent = moneyFormatter.format(sum);
-                node.style.color = sum > 0 ? '#0ea5e9' : '#94a3b8';
-            }
-            recalcGrandTotal();
-        }
-
-        function recalcGrandTotal() {
-            grandTotal = 0;
-            unitSumMap.forEach(val => grandTotal += val);
-            grandTotalEl.textContent = moneyFormatter.format(grandTotal) + '.000₫';
-        }
-
-        table.addEventListener('input', e => {
-            if (e.target.classList.contains('js-calc-trigger')) {
-                calculateRow(e.target);
-            }
-        });
-
-        table.addEventListener('focusin', e => {
-            if (!e.target.classList.contains('js-calc-trigger')) return;
-            document.querySelectorAll('.row-active, .col-active').forEach(el => {
-                el.classList.remove('row-active', 'col-active');
-            });
-            const td = e.target.closest('td');
-            const tr = e.target.closest('tr');
-            const colId = td.dataset.colIdx;
-            if (tr) tr.classList.add('row-active');
-            if (colId) {
-                table.querySelectorAll(`td[data-col-idx="${colId}"], th[data-col-idx="${colId}"]`)
-                    .forEach(c => c.classList.add('col-active'));
-            }
-            e.target.select();
-        });
-
-        table.addEventListener('keydown', e => {
-            if (!e.target.classList.contains('js-calc-trigger')) return;
-            const key = e.key;
-            const allowedKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter'];
-            if (!allowedKeys.includes(key)) return;
-            e.preventDefault();
-            const currentInput = e.target;
-            const currentTd = currentInput.closest('td');
-            const currentRow = currentTd.closest('tr');
-            const currentIndexInRow = Array.from(currentRow.children).indexOf(currentTd);
-            let nextInput = null;
-            if (key === 'ArrowRight') {
-                const nextTd = currentRow.children[currentIndexInRow + 1];
-                if (nextTd) nextInput = nextTd.querySelector('input');
-            } else if (key === 'ArrowLeft') {
-                const prevTd = currentRow.children[currentIndexInRow - 1];
-                if (prevTd) nextInput = prevTd.querySelector('input');
-            } else if (key === 'ArrowDown' || key === 'Enter') {
-                const nextRow = currentRow.nextElementSibling;
-                if (nextRow) {
-                    const targetTd = nextRow.children[currentIndexInRow];
-                    if (targetTd) nextInput = targetTd.querySelector('input');
+            // --- 1. SETUP DATE PICKER ---
+            const datePickerInput = document.querySelector('.date-picker');
+            const fpInstance = flatpickr(datePickerInput, {
+                locale: 'vn',
+                dateFormat: 'Y-m-d',
+                altInput: true,
+                altFormat: 'd/m/Y', 
+                defaultDate: '@Model.ProcessDate.ToString("yyyy-MM-dd")',
+                onChange: function(selectedDates, dateStr, instance) {
+                    const url = new URL(window.location.href);
+                    url.searchParams.set("ProcessDate", dateStr);
+                    window.location.href = url.toString();
                 }
-            } else if (key === 'ArrowUp') {
-                const prevRow = currentRow.previousElementSibling;
-                if (prevRow) {
-                    const targetTd = prevRow.children[currentIndexInRow];
-                    if (targetTd) nextInput = targetTd.querySelector('input');
+            });
+
+            // --- 2. MODAL LOGIC ---
+            saveBtn.addEventListener('click', (e) => {
+                e.preventDefault(); 
+                let dateStr = "Chưa chọn ngày";
+                if (fpInstance.selectedDates.length > 0) {
+                    dateStr = fpInstance.formatDate(fpInstance.selectedDates[0], "d/m/Y");
                 }
+                modalDateDisplay.textContent = dateStr;
+                modal.classList.remove('hidden'); 
+            });
+
+            btnCancel.addEventListener('click', () => {
+                modal.classList.add('hidden'); 
+            });
+
+            btnConfirm.addEventListener('click', () => {
+                btnConfirm.textContent = "Đang xử lý...";
+                btnConfirm.disabled = true;
+                btnConfirm.classList.add('opacity-75', 'cursor-not-allowed');
+                form.submit();
+            });
+
+            // Close modal on click outside
+            modal.addEventListener('click', (e) => {
+                if (e.target.classList.contains('bg-slate-900/40')) {
+                    modal.classList.add('hidden');
+                }
+            });
+
+            // --- 3. CALCULATION LOGIC ---
+            // Cache total display nodes
+            document.querySelectorAll('.unit-total-display').forEach(el => {
+                unitTotalNodes.set(el.id.replace('total-unit-', ''), el);
+            });
+
+            // Initial Calc
+            inputs.forEach(input => {
+                const uid = input.dataset.unitId;
+                if (!unitSumMap.has(uid)) unitSumMap.set(uid, 0);
+                if (input.value && input.value != "0") {
+                    calculateRow(input);
+                }
+            });
+
+            function calculateRow(input) {
+                const qty = parseFloat(input.value) || 0;
+                const price = parseFloat(input.dataset.price) || 0;
+                const total = qty * price;
+                const unitId = input.dataset.unitId;
+
+                // Show sub-total hint inside cell
+                const hintEl = input.nextElementSibling;
+                if (total > 0) {
+                    hintEl.textContent = moneyFormatter.format(total);
+                    hintEl.classList.add('has-value');
+                } else {
+                    hintEl.textContent = '';
+                    hintEl.classList.remove('has-value');
+                }
+                
+                recalcUnitTotal(unitId);
             }
-            if (nextInput) nextInput.focus();
+
+            function recalcUnitTotal(unitId) {
+                let sum = 0;
+                const unitInputs = document.querySelectorAll(`.js-calc-trigger[data-unit-id="${unitId}"]`);
+                unitInputs.forEach(inp => {
+                    const q = parseFloat(inp.value) || 0;
+                    const p = parseFloat(inp.dataset.price) || 0;
+                    sum += (q * p);
+                });
+                
+                unitSumMap.set(unitId, sum);
+                const node = unitTotalNodes.get(unitId);
+                if (node) {
+                    node.textContent = moneyFormatter.format(sum);
+                }
+                recalcGrandTotal();
+            }
+
+            function recalcGrandTotal() {
+                grandTotal = 0;
+                unitSumMap.forEach(val => grandTotal += val);
+                grandTotalEl.textContent = moneyFormatter.format(grandTotal) + '.000₫';
+            }
+
+            // --- 4. EXCEL NAVIGATION & EVENTS ---
+            table.addEventListener('input', e => {
+                if (e.target.classList.contains('js-calc-trigger')) {
+                    calculateRow(e.target);
+                }
+            });
+
+            // Highlight Active
+            table.addEventListener('focusin', e => {
+                if (!e.target.classList.contains('js-calc-trigger')) return;
+                
+                // Clear old actives
+                document.querySelectorAll('.row-active, .col-active').forEach(el => {
+                    el.classList.remove('row-active', 'col-active');
+                });
+
+                const td = e.target.closest('td');
+                const tr = e.target.closest('tr');
+                const colId = td.dataset.colIdx;
+
+                if (tr) tr.classList.add('row-active');
+                if (colId) {
+                    table.querySelectorAll(`td[data-col-idx="${colId}"], th[data-col-idx="${colId}"]`)
+                        .forEach(c => c.classList.add('col-active'));
+                }
+                e.target.select();
+            });
+
+            // Keyboard Nav
+            table.addEventListener('keydown', e => {
+                if (!e.target.classList.contains('js-calc-trigger')) return;
+                const key = e.key;
+                const allowedKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter'];
+                if (!allowedKeys.includes(key)) return;
+                
+                if (key !== 'Enter') e.preventDefault(); // Allow Enter to submit if default, but usually we move down
+                if (key === 'Enter') e.preventDefault();
+
+                const currentInput = e.target;
+                const currentTd = currentInput.closest('td');
+                const currentRow = currentTd.closest('tr');
+                const currentIndexInRow = Array.from(currentRow.children).indexOf(currentTd);
+                
+                let nextInput = null;
+
+                if (key === 'ArrowRight') {
+                    const nextTd = currentRow.children[currentIndexInRow + 1];
+                    if (nextTd) nextInput = nextTd.querySelector('input');
+                } else if (key === 'ArrowLeft') {
+                    const prevTd = currentRow.children[currentIndexInRow - 1];
+                    if (prevTd) nextInput = prevTd.querySelector('input');
+                } else if (key === 'ArrowDown' || key === 'Enter') {
+                    const nextRow = currentRow.nextElementSibling;
+                    if (nextRow) {
+                        const targetTd = nextRow.children[currentIndexInRow];
+                        if (targetTd) nextInput = targetTd.querySelector('input');
+                    }
+                } else if (key === 'ArrowUp') {
+                    const prevRow = currentRow.previousElementSibling;
+                    if (prevRow) {
+                        const targetTd = prevRow.children[currentIndexInRow];
+                        if (targetTd) nextInput = targetTd.querySelector('input');
+                    }
+                }
+
+                if (nextInput) nextInput.focus();
+            });
         });
-    });
-</script>
+    </script>
 }

@@ -31,7 +31,7 @@ namespace FishCalc.Web.Pages.Fish
             }
             if(ImageUpload != null)
             {
-                var fileName = $"{FishType.Name}_img_{ImageUpload.FileName}";
+                var fileName = $"{FishType.Name}_img_{ImageUpload.FileName}.png";
                
                 // 2. Xác định thư mục lưu: wwwroot/uploads/fish-images 
                 // Lưu ý: Bạn cần tạo tay thư mục này trong project trước hoặc code tự tạo

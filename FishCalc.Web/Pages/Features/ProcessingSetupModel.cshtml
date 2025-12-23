@@ -38,8 +38,8 @@ ViewData["Title"] = "Thiết Lập Quy Trình";
 
             <div class="flex items-center justify-between mb-6">
                 <div>
-                    <h2 class="text-2xl font-bold text-gray-800">Bước 1: Chọn Nguyên Liệu</h2>
-                    <p class="text-gray-500 text-sm">Chọn các loại cá cần xử lý</p>
+                    <h2 class="text-2xl font-bold text-gray-800">Bước 1: Chọn Loại Cá</h2>
+                    <p class="text-gray-500 text-sm">Chọn các loại cá cần gia công</p>
                 </div>
 
                 <div class="flex items-center gap-4">
@@ -89,7 +89,7 @@ ViewData["Title"] = "Thiết Lập Quy Trình";
                             <h4 class="text-lg font-bold text-gray-800 mb-1 leading-tight">@fish.Name</h4>
                             <span
                                 class="inline-block bg-blue-50 text-blue-700 text-xs font-semibold px-2.5 py-1 rounded-md mt-1">
-                                @fish.PricePerUnit.ToString("#,##0")đ / @fish.UnitOfMeasure
+                                @fish.PricePerUnit.ToString("#,##0").000đ / @fish.UnitOfMeasure
                             </span>
                         </div>
 
@@ -128,8 +128,7 @@ ViewData["Title"] = "Thiết Lập Quy Trình";
 
             <div class="flex items-center justify-between mb-6 max-w-5xl mx-auto">
                 <div>
-                    <h2 class="text-2xl font-bold text-gray-800">Bước 2: Phân Bổ Nguồn Lực</h2>
-                    <p class="text-gray-500 text-sm">Chọn Tổ hoặc Đơn vị xử lý</p>
+                    <h2 class="text-2xl font-bold text-gray-800">Bước 2: Chọn Tổ Gia Công</h2>
                 </div>
 
                 <div class="flex items-center gap-4">
