@@ -7,7 +7,7 @@ using FishCalc.Web.Entities;
 using FishCalc.Web.Interfaces;
 using FishCalc.Web.Interfaces.IServices;
 using System.Linq;
-using FishCalc.Web.Extensions;
+using FishCalc.Web.My.Extensions;
 
 namespace FishCalc.Web.Services;
 
@@ -21,7 +21,7 @@ public class FishTypeService(IFishTypeRepository _fishTypeRepository) : IFishTyp
         return entities.Select(e => e.ToDto()).ToList();
     }
 
-    public async Task<FishTypeDto?> GetFishTypeByIdAsync(int id)
+    public async Task<FishTypeDto?> GetFishTypeByIdAsync(int? id)
     {
         var entity = await _fishTypeRepository.GetFishTypeByIdAsync(id);
 
@@ -49,23 +49,19 @@ public class FishTypeService(IFishTypeRepository _fishTypeRepository) : IFishTyp
 
     public async Task UpdateFishTypeAsync(FishTypeDto dto)
     {
-        var entiy = dto.ToEntity();
+        var entity = dto.ToEntity();
 
-        await _fishTypeRepository.UpdateAsync(entiy); 
+        await _fishTypeRepository.UpdateAsync(entity); 
 
     }
     public async Task DeleteFishTypeAsync(int id)
     {
-        var entityToDelete = await _fishTypeRepository.GetFishTypeByIdAsync(id);
-
-        if (entityToDelete == null)
-        {
-            return; 
-        }
-
-        await _fishTypeRepository.Delete(entityToDelete);
-
+        await _fishTypeRepository.Delete(id);
     }
 
-    
+    public Task UpdatePriceByIdAsync(int id, FishPriceDto dto)
+    {
+        var entity = dto.ToEntity();
+        return _fishTypeRepository.UpdatePriceByIdAsync(id, entity);
+    }
 }

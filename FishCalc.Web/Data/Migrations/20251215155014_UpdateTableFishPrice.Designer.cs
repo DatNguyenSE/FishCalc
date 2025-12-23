@@ -4,6 +4,7 @@ using FishCalc.Web.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FishCalc.Web.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251215155014_UpdateTableFishPrice")]
+    partial class UpdateTableFishPrice
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -116,7 +119,8 @@ namespace FishCalc.Web.Migrations
 
                     b.HasKey("PriceId");
 
-                    b.HasIndex("FishTypeId");
+                    b.HasIndex("FishTypeId")
+                        .IsUnique();
 
                     b.ToTable("FishPrices");
                 });
@@ -337,11 +341,13 @@ namespace FishCalc.Web.Migrations
 
             modelBuilder.Entity("FishCalc.Web.Entities.FishPrice", b =>
                 {
-                    b.HasOne("FishCalc.Web.Entities.FishType", null)
-                        .WithMany("FishPrices")
-                        .HasForeignKey("FishTypeId")
+                    b.HasOne("FishCalc.Web.Entities.FishType", "FishType")
+                        .WithOne("FishPrice")
+                        .HasForeignKey("FishCalc.Web.Entities.FishPrice", "FishTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("FishType");
                 });
 
             modelBuilder.Entity("FishCalc.Web.Entities.SalaryProcess", b =>
@@ -416,7 +422,7 @@ namespace FishCalc.Web.Migrations
 
             modelBuilder.Entity("FishCalc.Web.Entities.FishType", b =>
                 {
-                    b.Navigation("FishPrices");
+                    b.Navigation("FishPrice");
                 });
 
             modelBuilder.Entity("FishCalc.Web.Entities.ProcessingUnit", b =>

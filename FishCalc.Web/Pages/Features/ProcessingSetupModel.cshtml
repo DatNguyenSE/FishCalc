@@ -1,37 +1,30 @@
 ﻿@page "/ProcessingSetupModel"
 @model FishCalc.Web.Pages.Features.ProcessingSetupModel
 @{
-    ViewData["Title"] = "Thiết Lập Quy Trình";
+ViewData["Title"] = "Thiết Lập Quy Trình";
 }
 
-@if (TempData["ErrorMessage"] != null)
-{
-    <div class=" text-red-500 alert alert-danger alert-dismissible fade show" role="alert">
-        @TempData["ErrorMessage"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-}
 <div class="container mx-auto px-4 py-8">
-    
-    <!-- THANH TIẾN TRÌNH (WIZARD PROGRESS) -->
+
     <div class="max-w-3xl mx-auto mb-10">
         <div class="relative flex items-center justify-between">
-            
-            <!-- 1. Thanh nền xám (Background Line) -->
-            <div class="absolute left-0 top-1/2 transform -translate-y-1/2 w-full h-1 bg-gray-200 -z-20 rounded-full"></div>
-            
-            <!-- 2. Thanh tiến trình xanh lá (Active Line) - Mặc định width 0% -->
-            <div id="progress-bar" class="absolute left-0 top-1/2 transform -translate-y-1/2 h-1 bg-green-500 -z-10 rounded-full transition-all duration-500 ease-in-out" style="width: 0%;"></div>
-            
-            <!-- Step 1 Indicator -->
+            <div class="absolute left-0 top-1/2 transform -translate-y-1/2 w-full h-1 bg-gray-200 -z-20 rounded-full">
+            </div>
+            <div id="progress-bar"
+                class="absolute left-0 top-1/2 transform -translate-y-1/2 h-1 bg-green-500 -z-10 rounded-full transition-all duration-500 ease-in-out"
+                style="width: 0%;"></div>
+
             <div id="step1-indicator" class="flex flex-col items-center bg-gray-50 px-2 z-10">
-                <div class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold border-4 border-white shadow-md transition-colors duration-300">1</div>
+                <div
+                    class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold border-4 border-white shadow-md transition-colors duration-300">
+                    1</div>
                 <span class="text-xs font-bold mt-2 text-blue-600 uppercase tracking-wide">Chọn Cá</span>
             </div>
 
-            <!-- Step 2 Indicator -->
             <div id="step2-indicator" class="flex flex-col items-center bg-gray-50 px-2 z-10">
-                <div class="w-10 h-10 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center font-bold border-4 border-white shadow-md transition-colors duration-300">2</div>
+                <div
+                    class="w-10 h-10 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center font-bold border-4 border-white shadow-md transition-colors duration-300">
+                    2</div>
                 <span class="text-xs font-bold mt-2 text-gray-400 uppercase tracking-wide">Chọn Đơn Vị</span>
             </div>
         </div>
@@ -40,147 +33,195 @@
     <div asp-validation-summary="ModelOnly" class="text-red-600 mb-4 font-medium text-center"></div>
 
     <form method="post" id="setupForm">
-        
-        <!-- ================= BƯỚC 1: CHỌN CÁ ================= -->
+
         <div id="step-1-section" class="transition-opacity duration-300 animate-fade-in">
-            <div class="text-center mb-8">
-                <h2 class="text-2xl font-bold text-gray-800">Bước 1: Chọn các loại cá</h2>
-                <p class="text-gray-500">Vui lòng chọn các loại cá cho việc tính toán tiền công</p>
+
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-800">Bước 1: Chọn Loại Cá</h2>
+                    <p class="text-gray-500 text-sm">Chọn các loại cá cần gia công</p>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <button type="button" id="btn-select-all-fish"
+                        class="text-sm font-semibold text-blue-600 hover:text-blue-800 hover:bg-blue-50 px-3 py-2 rounded-lg transition-colors border border-transparent hover:border-blue-100">
+                        Chọn tất cả
+                    </button>
+
+                    <div class="bg-gray-100 p-1 rounded-lg flex">
+                        <button type="button" onclick="switchView('fish', 'grid')" id="btn-fish-grid"
+                            class="p-2 rounded-md text-gray-500 hover:text-blue-600 transition-all">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                            </svg>
+                        </button>
+                        <button type="button" onclick="switchView('fish', 'list')" id="btn-fish-list"
+                            class="p-2 rounded-md bg-white shadow-sm text-blue-600 transition-all">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
             </div>
-            
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"> 
-                @for (var i = 0; i < Model.FishTypes.Count; i++)
-                {
-                    var fish = Model.FishTypes[i];
-                    <label for="fish_@fish.Id" class="block group relative h-full">
-                        
-                        <input type="checkbox" 
-                               name="SelectedFishIds" 
-                               value="@fish.Id" 
-                               class="fish-checkbox hidden" 
-                               id="fish_@fish.Id" 
-                        />
-                        
-                        <div id="card_fish_@fish.Id" 
-                             class="fish-card h-full border-2 border-gray-100 rounded-2xl p-6 text-center cursor-pointer 
-                                    shadow-sm hover:shadow-lg hover:border-blue-400 hover:-translate-y-1 transition-all duration-300 
-                                    flex flex-col items-center bg-white relative">
-                            
-                            <div class="w-20 h-20 mb-4 rounded-full bg-blue-50 p-1 shadow-inner">
-                                <img src="@fish.ImgFishUrl" alt="@fish.Name" 
-                                     class="w-full h-full object-cover rounded-full" 
-                                     onerror="this.onerror=null;this.src='/images/default_fish.png';" 
-                                />
-                            </div>
-                            
-                            <h4 class="text-lg font-bold text-gray-800 mb-1">@fish.Name</h4>
-                            <span class="inline-block bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-md">
-                                ĐVT: @fish.UnitOfMeasure
-                            </span>
-                            
-                            <!-- Checkmark icon -->
-                            <div id="badge_fish_@fish.Id" class="absolute top-3 right-3 bg-green-500 text-white rounded-full p-1 shadow-md hidden transform scale-100 transition-transform duration-300">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                                </svg>
-                            </div>
+
+            <div id="fish-container" class="flex flex-col gap-2 mb-8 transition-all duration-300">
+                @for (var i = 0; i < Model.FishTypes.Count; i++) { var fish=Model.FishTypes[i]; <label
+                    for="fish_@fish.Id" class="block group relative cursor-pointer select-none h-full"> <input
+                        type="checkbox" name="SelectedFishIds" value="@fish.Id" class="fish-checkbox hidden"
+                        id="fish_@fish.Id" />
+
+                    <div id="card_fish_@fish.Id" class="fish-card border border-gray-200 rounded-2xl bg-white transition-all duration-200
+                    hover:border-blue-400 hover:shadow-lg overflow-hidden
+                    flex flex-row items-center p-3 px-4 justify-between text-left w-full h-full">
+
+                        <div
+                            class="fish-img-wrapper h-48 w-full mb-4 rounded-xl overflow-hidden shadow-sm transition-all hidden relative group-hover:shadow-md">
+                            <img src="@fish.ImgFishUrl" alt="@fish.Name"
+                                class="w-full h-full"
+                                onerror="this.onerror=null;this.src='/images/default_fish.png';" />
                         </div>
+                        <div class="fish-info-wrapper flex-grow md:flex-grow-0">
+                            <h4 class="text-lg font-bold text-gray-800 mb-1 leading-tight">@fish.Name</h4>
+                            <span
+                                class="inline-block bg-blue-50 text-blue-700 text-xs font-semibold px-2.5 py-1 rounded-md mt-1">
+                                @fish.PricePerUnit.ToString("#,##0").000đ / @fish.UnitOfMeasure
+                            </span>
+                        </div>
+
+                        <div id="badge_fish_@fish.Id"
+                            class="bg-blue-600 text-white rounded-full p-1 shadow-md hidden transition-transform duration-300 z-10 relative ml-3 scale-90">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                                fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                    </div>
                     </label>
-                }
+                    }
             </div>
 
             <div class="text-center">
-                <button type="button" id="btn-next" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-10 rounded-full shadow-lg hover:shadow-blue-500/30 transform hover:-translate-y-0.5 transition duration-300 flex items-center mx-auto gap-2">
-                    Tiếp Tục 
+                <button type="button" id="btn-next"
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-10 rounded-full shadow-lg hover:shadow-blue-500/30 transform hover:-translate-y-0.5 transition duration-300 flex items-center mx-auto gap-2">
+                    Tiếp Tục
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                        <path fill-rule="evenodd"
+                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                            clip-rule="evenodd" />
                     </svg>
                 </button>
-                <p id="step1-error" class="text-red-500 mt-3 hidden text-sm font-semibold bg-red-50 inline-block px-4 py-1 rounded-full animate-pulse">
+                <p id="step1-error"
+                    class="text-red-500 mt-3 hidden text-sm font-semibold bg-red-50 inline-block px-4 py-1 rounded-full animate-pulse">
                     ⚠️ Vui lòng chọn ít nhất một loại cá
                 </p>
             </div>
         </div>
 
-        <!-- ================= BƯỚC 2: CHỌN ĐƠN VỊ (GIAO DIỆN MỚI) ================= -->
         <div id="step-2-section" class="hidden transition-opacity duration-300 animate-fade-in">
-            <div class="text-center mb-8">
-                <h2 class="text-2xl font-bold text-gray-800">Bước 2: Đơn vị & Tổ gia công</h2>
-                <p class="text-gray-500">Chọn Tổ hoặc Đơn vị xử lý cá</p>
+
+            <div class="flex items-center justify-between mb-6 max-w-5xl mx-auto">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-800">Bước 2: Chọn Tổ Gia Công</h2>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <button type="button" id="btn-select-all-unit"
+                        class="text-sm font-semibold text-blue-600 hover:text-blue-800 hover:bg-blue-50 px-3 py-2 rounded-lg transition-colors border border-transparent hover:border-blue-100">
+                        Chọn tất cả
+                    </button>
+
+                    <div class="bg-gray-100 p-1 rounded-lg flex">
+                        <button type="button" onclick="switchView('unit', 'grid')" id="btn-unit-grid"
+                            class="p-2 rounded-md text-gray-500 hover:text-blue-600 transition-all">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                            </svg>
+                        </button>
+                        <button type="button" onclick="switchView('unit', 'list')" id="btn-unit-list"
+                            class="p-2 rounded-md bg-white shadow-sm text-blue-600 transition-all">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
             </div>
 
-            <!-- Grid Card cho Đơn Vị -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8 max-w-5xl mx-auto">
-                @for (var i = 0; i < Model.ProcessingUnit.Count; i++)
-                {
-                    var unit = Model.ProcessingUnit[i];
-                    <label for="unit_@unit.UnitId" class="block group relative h-full">
-                        
-                        <!-- Checkbox gửi về SelectedUnitIds -->
-                        <input type="checkbox" 
-                               name="SelectedUnitIds" 
-                               value="@unit.UnitId" 
-                               class="unit-checkbox hidden" 
-                               id="unit_@unit.UnitId" 
-                        />
-                        
-                        <div id="card_unit_@unit.UnitId" 
-                             class="unit-card h-full border-2 border-gray-100 rounded-2xl p-6 text-center cursor-pointer 
-                                    shadow-sm hover:shadow-lg hover:border-purple-400 hover:-translate-y-1 transition-all duration-300 
-                                    flex flex-col items-center bg-white relative">
-                            
-                            <!-- Icon Factory/Team -->
-                            <div class="w-16 h-16 mb-4 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center shadow-sm">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-  <path stroke-linecap="round" stroke-linejoin="round" d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Zm6-10.125a1.875 1.875 0 1 1-3.75 0 1.875 1.875 0 0 1 3.75 0Zm1.294 6.336a6.721 6.721 0 0 1-3.17.789 6.721 6.721 0 0 1-3.168-.789 3.376 3.376 0 0 1 6.338 0Z" />
-</svg>
+            <div id="unit-container" class="flex flex-col gap-2 mb-8 max-w-5xl mx-auto transition-all duration-300">
+                @for (var i = 0; i < Model.ProcessingUnit.Count; i++) { var unit=Model.ProcessingUnit[i]; <label
+                    for="unit_@unit.UnitId" class="block group relative cursor-pointer select-none">
 
-                            </div>
-                            
-                            <h4 class="text-lg font-bold text-gray-800 mb-1">@unit.UnitName</h4>
-                            
+                    <input type="checkbox" name="SelectedUnitIds" value="@unit.UnitId" class="unit-checkbox hidden"
+                        id="unit_@unit.UnitId" />
+
+                    <div id="card_unit_@unit.UnitId" class="unit-card border border-gray-200 rounded-xl bg-white transition-all duration-200 
+                                    hover:border-purple-400 hover:shadow-md
+                                    flex flex-row items-center p-3 px-4 justify-between text-left w-full">
+
+                        <div
+                            class="unit-img-wrapper w-16 h-16 mb-4 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center shadow-sm transition-all hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                            </svg>
+                        </div>
+
+                        <div class="unit-info-wrapper">
+                            <h4 class="text-lg font-bold text-gray-800 mb-1 leading-tight">@unit.UnitName</h4>
                             @if (!string.IsNullOrEmpty(unit.Contact))
                             {
-                                <p class="text-sm text-gray-500 flex items-center gap-1 mt-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                                      <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
-                                    </svg>
-                                    @unit.Contact
-                                </p>
+                            <p class="text-sm text-gray-500 mt-1 truncate">@unit.Contact</p>
                             }
-                            else 
-                            {
-                                <p class="text-sm text-gray-400 mt-2 italic">Chưa có liên hệ</p>
-                            }
-                            
-                            <!-- Checkmark icon -->
-                            <div id="badge_unit_@unit.UnitId" class="absolute top-3 right-3 bg-purple-600 text-white rounded-full p-1 shadow-md hidden transform scale-100 transition-transform duration-300">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                                </svg>
-                            </div>
                         </div>
+
+                        <div id="badge_unit_@unit.UnitId"
+                            class="bg-purple-600 text-white rounded-full p-1 shadow-md hidden transition-transform duration-300 z-10 relative ml-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20"
+                                fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                    </div>
                     </label>
-                }
+                    }
             </div>
 
-            <!-- Nút điều hướng Step 2 -->
             <div class="flex gap-4 justify-center pt-6 border-t border-gray-100 max-w-2xl mx-auto">
-                <button type="button" id="btn-back" class="text-gray-500 hover:text-gray-800 font-semibold py-3 px-8 rounded-full hover:bg-gray-100 transition flex items-center gap-2">
+                <button type="button" id="btn-back"
+                    class="text-gray-500 hover:text-gray-800 font-semibold py-3 px-8 rounded-full hover:bg-gray-100 transition flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                        <path fill-rule="evenodd"
+                            d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                            clip-rule="evenodd" />
                     </svg>
                     Quay lại
                 </button>
-                
-                <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-10 rounded-full shadow-lg hover:shadow-green-500/30 transform hover:-translate-y-0.5 transition duration-300 flex items-center gap-2">
+
+                <button type="submit"
+                    class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-10 rounded-full shadow-lg hover:shadow-green-500/30 transform hover:-translate-y-0.5 transition duration-300 flex items-center gap-2">
                     Xác Nhận
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                        <path fill-rule="evenodd"
+                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                            clip-rule="evenodd" />
                     </svg>
                 </button>
             </div>
-            
+
             <p id="step2-error" class="text-red-500 mt-3 hidden text-sm font-semibold text-center">
                 ⚠️ Vui lòng chọn ít nhất một Đơn vị
             </p>
@@ -190,125 +231,207 @@
 </div>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            
-            // --- HÀM HELPER: Cập nhật giao diện thẻ (Card) ---
-            // type: 'fish' hoặc 'unit'
-            // color: 'blue' (cho cá) hoặc 'purple' (cho đơn vị)
-            const updateVisuals = (type, color) => {
-                const checkboxes = document.querySelectorAll(`.${type}-checkbox`);
-                
-                checkboxes.forEach(checkbox => {
-                    const id = checkbox.value;
-                    const card = document.getElementById(`card_${type}_${id}`);
-                    const badge = document.getElementById(`badge_${type}_${id}`);
+<partial name="_ValidationScriptsPartial" />
+<script>
+    // Hàm chuyển đổi chế độ xem Grid/List
+    function switchView(type, mode) {
+        const container = document.getElementById(`${type}-container`);
+        const cards = container.querySelectorAll(`.${type}-card`);
+        const imgWrappers = container.querySelectorAll(`.${type}-img-wrapper`);
+        const infoWrappers = container.querySelectorAll(`.${type}-info-wrapper`);
+        const badges = container.querySelectorAll(`[id^='badge_${type}_']`);
 
-                    if (checkbox.checked) {
-                        // Selected State
-                        card.classList.add('ring-2', `ring-${color}-500`, `border-${color}-500`, `bg-${color}-50`);
-                        card.classList.remove('border-gray-100', 'bg-white');
-                        badge.classList.remove('hidden');
-                    } else {
-                        // Unselected State
-                        card.classList.remove('ring-2', `ring-${color}-500`, `border-${color}-500`, `bg-${color}-50`);
-                        card.classList.add('border-gray-100', 'bg-white');
-                        badge.classList.add('hidden');
-                    }
-                });
-            };
+        const btnGrid = document.getElementById(`btn-${type}-grid`);
+        const btnList = document.getElementById(`btn-${type}-list`);
 
-            // --- 1. LOGIC CHỌN CÁ ---
-            const fishCheckboxes = document.querySelectorAll('.fish-checkbox');
-            fishCheckboxes.forEach(cb => cb.addEventListener('change', () => updateVisuals('fish', 'blue')));
-            updateVisuals('fish', 'blue'); // Init
+        if (mode === 'list') {
+            btnGrid.classList.remove('bg-white', 'shadow-sm', 'text-blue-600');
+            btnGrid.classList.add('text-gray-500');
+            btnList.classList.add('bg-white', 'shadow-sm', 'text-blue-600');
+            btnList.classList.remove('text-gray-500');
 
-            // --- 2. LOGIC CHỌN ĐƠN VỊ ---
-            const unitCheckboxes = document.querySelectorAll('.unit-checkbox');
-            unitCheckboxes.forEach(cb => cb.addEventListener('change', () => updateVisuals('unit', 'purple')));
-            updateVisuals('unit', 'purple'); // Init
+            container.classList.remove('grid', 'grid-cols-1', 'sm:grid-cols-2', 'lg:grid-cols-3', 'gap-4');
+            container.classList.add('flex', 'flex-col', 'gap-2');
 
-
-            // --- 3. LOGIC WIZARD (CHUYỂN BƯỚC) ---
-            const step1Section = document.getElementById('step-1-section');
-            const step2Section = document.getElementById('step-2-section');
-            const btnNext = document.getElementById('btn-next');
-            const btnBack = document.getElementById('btn-back');
-            const progressBar = document.getElementById('progress-bar');
-            
-            const step1Error = document.getElementById('step1-error');
-            const step2Error = document.getElementById('step2-error');
-            const form = document.getElementById('setupForm');
-
-            const ind1 = document.querySelector('#step1-indicator div');
-            const ind2 = document.querySelector('#step2-indicator div');
-            const txt1 = document.querySelector('#step1-indicator span');
-            const txt2 = document.querySelector('#step2-indicator span');
-
-            // === SỰ KIỆN: BẤM NÚT TIẾP TỤC ===
-            btnNext.addEventListener('click', function() {
-                const selectedCount = document.querySelectorAll('.fish-checkbox:checked').length;
-                
-                if (selectedCount === 0) {
-                    step1Error.classList.remove('hidden');
-                    return;
-                }
-                
-                step1Error.classList.add('hidden');
-                
-                // Hiệu ứng chuyển đổi
-                step1Section.classList.add('hidden');
-                step2Section.classList.remove('hidden');
-
-                // *** ANIMATION PROGRESS BAR ***
-                // Chạy width từ 0% lên 100% (lấp đầy khoảng cách giữa 2 điểm)
-                progressBar.style.width = '100%';
-
-                // Update UI Indicators
-                ind1.classList.remove('bg-blue-600', 'text-white', 'border-white');
-                ind1.classList.add('bg-green-500', 'text-white', 'border-green-100');
-                ind1.innerHTML = '✓';
-                txt1.classList.remove('text-blue-600');
-                txt1.classList.add('text-green-600');
-
-                ind2.classList.remove('bg-gray-300', 'text-gray-600');
-                ind2.classList.add('bg-blue-600', 'text-white');
-                txt2.classList.remove('text-gray-400');
-                txt2.classList.add('text-blue-600');
+            cards.forEach(card => {
+                card.classList.remove('flex-col', 'items-center', 'p-6', 'text-center', 'h-full');
+                card.classList.add('flex-row', 'items-center', 'p-3', 'px-4', 'justify-between', 'text-left', 'w-full');
             });
 
-            // === SỰ KIỆN: BẤM NÚT QUAY LẠI ===
-            btnBack.addEventListener('click', function() {
-                step2Section.classList.add('hidden');
-                step1Section.classList.remove('hidden');
+            imgWrappers.forEach(img => img.classList.add('hidden'));
 
-                // *** RESET PROGRESS BAR ***
-                progressBar.style.width = '0%';
-
-                // Reset UI Indicators
-                ind1.classList.add('bg-blue-600', 'text-white', 'border-white');
-                ind1.classList.remove('bg-green-500', 'text-white', 'border-green-100');
-                ind1.innerHTML = '1';
-                txt1.classList.add('text-blue-600');
-                txt1.classList.remove('text-green-600');
-
-                ind2.classList.add('bg-gray-300', 'text-gray-600');
-                ind2.classList.remove('bg-blue-600', 'text-white');
-                txt2.classList.add('text-gray-400');
-                txt2.classList.remove('text-blue-600');
+            infoWrappers.forEach(info => {
+                info.classList.remove('w-full');
             });
 
-            // === SỰ KIỆN: SUBMIT FORM (Validate bước 2) ===
-            form.addEventListener('submit', function(e) {
-                const selectedUnitCount = document.querySelectorAll('.unit-checkbox:checked').length;
-                if (selectedUnitCount === 0) {
-                    e.preventDefault(); // Chặn gửi form
-                    step2Error.classList.remove('hidden');
+            badges.forEach(badge => {
+                badge.classList.remove('absolute', 'top-3', 'right-3');
+                badge.classList.add('relative', 'ml-3');
+                badge.style.transform = 'none';
+            });
+
+        } else { // GRID MODE
+            btnList.classList.remove('bg-white', 'shadow-sm', 'text-blue-600');
+            btnList.classList.add('text-gray-500');
+            btnGrid.classList.add('bg-white', 'shadow-sm', 'text-blue-600');
+            btnGrid.classList.remove('text-gray-500');
+
+            container.classList.add('grid', 'grid-cols-1', 'sm:grid-cols-2', 'lg:grid-cols-3', 'gap-4');
+            container.classList.remove('flex', 'flex-col', 'gap-2');
+
+            cards.forEach(card => {
+                card.classList.add('flex-col', 'items-center', 'p-6', 'text-center', 'h-full');
+                card.classList.remove('flex-row', 'items-center', 'p-3', 'px-4', 'justify-between', 'text-left', 'w-full');
+            });
+
+            imgWrappers.forEach(img => img.classList.remove('hidden'));
+
+            infoWrappers.forEach(info => {
+                info.classList.add('w-full');
+            });
+
+            badges.forEach(badge => {
+                badge.classList.add('absolute', 'top-3', 'right-3');
+                badge.classList.remove('relative', 'ml-3');
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // --- HÀM HELPER: Cập nhật visual khi chọn ---
+        const updateVisuals = (type, color) => {
+            const checkboxes = document.querySelectorAll(`.${type}-checkbox`);
+
+            checkboxes.forEach(checkbox => {
+                const id = checkbox.value;
+                const card = document.getElementById(`card_${type}_${id}`);
+                const badge = document.getElementById(`badge_${type}_${id}`);
+
+                if (checkbox.checked) {
+                    card.classList.add(`ring-1`, `ring-${color}-500`, `border-${color}-500`, `bg-${color}-50`);
+                    card.classList.remove('border-gray-200', 'bg-white');
+                    badge.classList.remove('hidden');
                 } else {
-                    step2Error.classList.add('hidden');
+                    card.classList.remove(`ring-1`, `ring-${color}-500`, `border-${color}-500`, `bg-${color}-50`);
+                    card.classList.add('border-gray-200', 'bg-white');
+                    badge.classList.add('hidden');
                 }
             });
+
+            // Cập nhật text của nút "Chọn tất cả"
+            updateSelectAllButtonState(type);
+        };
+
+        // --- HÀM HELPER: Cập nhật text nút Select All ---
+        const updateSelectAllButtonState = (type) => {
+            const checkboxes = document.querySelectorAll(`.${type}-checkbox`);
+            const btn = document.getElementById(`btn-select-all-${type}`);
+            if (!btn) return;
+
+            const allChecked = Array.from(checkboxes).every(c => c.checked);
+            btn.innerText = allChecked ? "Bỏ chọn tất cả" : "Chọn tất cả";
+        };
+
+        // --- INIT LOGIC ---
+        // 1. Gán sự kiện cho từng checkbox
+        const fishCheckboxes = document.querySelectorAll('.fish-checkbox');
+        fishCheckboxes.forEach(cb => cb.addEventListener('change', () => updateVisuals('fish', 'blue')));
+        updateVisuals('fish', 'blue');
+
+        const unitCheckboxes = document.querySelectorAll('.unit-checkbox');
+        unitCheckboxes.forEach(cb => cb.addEventListener('change', () => updateVisuals('unit', 'purple')));
+        updateVisuals('unit', 'purple');
+
+        // 2. Gán sự kiện cho nút Select All (Fish & Unit)
+        const setupSelectAll = (type, color) => {
+            const btn = document.getElementById(`btn-select-all-${type}`);
+            const checkboxes = document.querySelectorAll(`.${type}-checkbox`);
+
+            if (btn) {
+                btn.addEventListener('click', () => {
+                    // Kiểm tra xem tất cả có đang được chọn hay không
+                    const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+                    const newState = !allChecked; // Toggle
+
+                    checkboxes.forEach(cb => {
+                        cb.checked = newState;
+                    });
+
+                    updateVisuals(type, color);
+                });
+            }
+        };
+
+        setupSelectAll('fish', 'blue');
+        setupSelectAll('unit', 'purple');
+
+
+        // --- WIZARD LOGIC ---
+        const step1Section = document.getElementById('step-1-section');
+        const step2Section = document.getElementById('step-2-section');
+        const btnNext = document.getElementById('btn-next');
+        const btnBack = document.getElementById('btn-back');
+        const progressBar = document.getElementById('progress-bar');
+
+        const step1Error = document.getElementById('step1-error');
+        const step2Error = document.getElementById('step2-error');
+        const form = document.getElementById('setupForm');
+
+        const ind1 = document.querySelector('#step1-indicator div');
+        const ind2 = document.querySelector('#step2-indicator div');
+        const txt1 = document.querySelector('#step1-indicator span');
+        const txt2 = document.querySelector('#step2-indicator span');
+
+        btnNext.addEventListener('click', function () {
+            const selectedCount = document.querySelectorAll('.fish-checkbox:checked').length;
+            if (selectedCount === 0) {
+                step1Error.classList.remove('hidden');
+                return;
+            }
+            step1Error.classList.add('hidden');
+            step1Section.classList.add('hidden');
+            step2Section.classList.remove('hidden');
+            progressBar.style.width = '100%';
+
+            ind1.classList.remove('bg-blue-600', 'text-white', 'border-white');
+            ind1.classList.add('bg-green-500', 'text-white', 'border-green-100');
+            ind1.innerHTML = '✓';
+            txt1.classList.remove('text-blue-600');
+            txt1.classList.add('text-green-600');
+
+            ind2.classList.remove('bg-gray-300', 'text-gray-600');
+            ind2.classList.add('bg-blue-600', 'text-white');
+            txt2.classList.remove('text-gray-400');
+            txt2.classList.add('text-blue-600');
         });
-    </script>
+
+        btnBack.addEventListener('click', function () {
+            step2Section.classList.add('hidden');
+            step1Section.classList.remove('hidden');
+            progressBar.style.width = '0%';
+
+            ind1.classList.add('bg-blue-600', 'text-white', 'border-white');
+            ind1.classList.remove('bg-green-500', 'text-white', 'border-green-100');
+            ind1.innerHTML = '1';
+            txt1.classList.add('text-blue-600');
+            txt1.classList.remove('text-green-600');
+
+            ind2.classList.add('bg-gray-300', 'text-gray-600');
+            ind2.classList.remove('bg-blue-600', 'text-white');
+            txt2.classList.add('text-gray-400');
+            txt2.classList.remove('text-blue-600');
+        });
+
+        form.addEventListener('submit', function (e) {
+            const selectedUnitCount = document.querySelectorAll('.unit-checkbox:checked').length;
+            if (selectedUnitCount === 0) {
+                e.preventDefault();
+                step2Error.classList.remove('hidden');
+            } else {
+                step2Error.classList.add('hidden');
+            }
+        });
+    });
+</script>
 }

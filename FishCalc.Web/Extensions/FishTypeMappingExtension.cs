@@ -1,35 +1,52 @@
 using FishCalc.Web.DTOs;
 using FishCalc.Web.Entities;
 
-namespace FishCalc.Web.Extensions;
+namespace FishCalc.Web.My.Extensions;
 
 // Lớp tĩnh chứa các extension method
 public static class FishTypeMappingExtension
 {
     // 1. Ánh xạ Entity (nguồn) sang DTO (đích) - Dùng cho Truy vấn (Get)
     public static FishTypeDto ToDto(this FishType entity)
-    {
-        return new FishTypeDto
         {
-            Id = entity.Id,
-            Name = entity.Name,
-            UnitOfMeasure = entity.UnitOfMeasure ?? string.Empty,
-            ImgFishUrl = entity.ImgFishUrl,
-            PricePerUnitOfMeasure = entity.FishPrice?.PricePerUnitOfMeasure ?? 0
-        };
-    }
+            if (entity == null) return null;
 
-    // 2. Ánh xạ DTO (nguồn) sang Entity (đích mới) - Dùng cho Tạo mới (Create)
+            return new FishTypeDto
+            {
+                Id = entity.Id,
+                Name = entity.Name,
+                ImgFishUrl = entity.ImgFishUrl,
+                UnitOfMeasure = entity.FishPrices?.First()?.UnitOfMeasure ?? "Kilogram",
+
+                PricePerUnit = entity.FishPrices?.First()?.PricePerUnit ?? 999
+            };
+        }
+
+    // - Dùng cho Tạo mới (Create)
     public static FishType ToEntity(this FishTypeDto dto)
-    {
-        return new FishType
         {
-            Id = dto.Id,
-            Name = dto.Name,
-            UnitOfMeasure = dto.UnitOfMeasure ?? string.Empty,
-            ImgFishUrl = dto.ImgFishUrl
-        };
-    }
+            if (dto == null) return null;
+
+            var entity = new FishType
+            {
+                Id = dto.Id,
+                Name = dto.Name,
+                ImgFishUrl = dto.ImgFishUrl
+            
+            };
+
+            if (dto.PricePerUnit > 0)
+            {
+                entity.FishPrices.Add(new FishPrice
+                {
+                    PricePerUnit = dto.PricePerUnit,
+                    EffectiveDate = DateTime.Now, 
+                    UnitOfMeasure = dto.UnitOfMeasure
+                });
+            }
+
+            return entity;
+        }
     
     // 3. Ánh xạ DTO (nguồn) vào Entity đã tồn tại (đích) - Dùng cho Cập nhật (Update)
     // Phương thức này CẬP NHẬT TRỰC TIẾP lên đối tượng entity

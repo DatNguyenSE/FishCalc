@@ -14,9 +14,11 @@
 
     <!-- 2. Phần nội dung chính của từng trang -->
     <!-- ID="main-content" và class "ml-64" rất quan trọng để khớp với Sidebar -->
-    <main id="main-content" class="flex-1 p-6 md:p-8 ml-64 transition-all duration-300 min-h-screen">
+    <div class="flex">
+    <main id="main-content" class="flex-1 p-6 ml-20 transition-all duration-300 min-h-screen">
         @RenderBody()
     </main>
+</div>
 
     <!-- Script chung nếu có -->
     @await RenderSectionAsync("Scripts", required: false)

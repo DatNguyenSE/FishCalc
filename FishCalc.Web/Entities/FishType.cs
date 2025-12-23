@@ -10,13 +10,12 @@ public class FishType
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
     public required string Name { get; set; }
-    public string? UnitOfMeasure {get;set;} ="Kilogram";
     public string? ImgFishUrl { get; set; } 
 
 
     // -----------Nav property
-    public FishPrice? FishPrice {get;set;} =null!;
-
+    //1-N vì một loại cá có thể có nhiều giá khác nhau theo thời gian
+    public virtual ICollection<FishPrice> FishPrices { get; set; } = new List<FishPrice>();
 }
 
 

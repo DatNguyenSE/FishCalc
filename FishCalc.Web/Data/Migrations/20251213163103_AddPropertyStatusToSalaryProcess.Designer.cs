@@ -4,6 +4,7 @@ using FishCalc.Web.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FishCalc.Web.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251213163103_AddPropertyStatusToSalaryProcess")]
+    partial class AddPropertyStatusToSalaryProcess
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -102,21 +105,16 @@ namespace FishCalc.Web.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PriceId"));
 
-                    b.Property<DateTime>("EffectiveDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("FishTypeId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("PricePerUnit")
+                    b.Property<decimal>("PricePerUnitOfMeasure")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("UnitOfMeasure")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("PriceId");
 
-                    b.HasIndex("FishTypeId");
+                    b.HasIndex("FishTypeId")
+                        .IsUnique();
 
                     b.ToTable("FishPrices");
                 });
@@ -134,6 +132,9 @@ namespace FishCalc.Web.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UnitOfMeasure")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -178,7 +179,7 @@ namespace FishCalc.Web.Migrations
                     b.Property<string>("Notes")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("PricePerUnit")
+                    b.Property<decimal>("PricePerKg")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("ProcessingUnitId")
@@ -187,8 +188,9 @@ namespace FishCalc.Web.Migrations
                     b.Property<decimal>("SalaryPayment")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TotalQuantityProcessed")
                         .HasColumnType("decimal(18,2)");
@@ -337,11 +339,13 @@ namespace FishCalc.Web.Migrations
 
             modelBuilder.Entity("FishCalc.Web.Entities.FishPrice", b =>
                 {
-                    b.HasOne("FishCalc.Web.Entities.FishType", null)
-                        .WithMany("FishPrices")
-                        .HasForeignKey("FishTypeId")
+                    b.HasOne("FishCalc.Web.Entities.FishType", "FishType")
+                        .WithOne("FishPrice")
+                        .HasForeignKey("FishCalc.Web.Entities.FishPrice", "FishTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("FishType");
                 });
 
             modelBuilder.Entity("FishCalc.Web.Entities.SalaryProcess", b =>
@@ -416,7 +420,7 @@ namespace FishCalc.Web.Migrations
 
             modelBuilder.Entity("FishCalc.Web.Entities.FishType", b =>
                 {
-                    b.Navigation("FishPrices");
+                    b.Navigation("FishPrice");
                 });
 
             modelBuilder.Entity("FishCalc.Web.Entities.ProcessingUnit", b =>

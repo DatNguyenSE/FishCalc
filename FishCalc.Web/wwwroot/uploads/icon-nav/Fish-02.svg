@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   version="1.1"
+   id="svg1"
+   width="682.66669"
+   height="550.79999"
+   viewBox="0 0 682.66669 550.79999"
+   sodipodi:docname="Fish-02.eps"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1">
+    <inkscape:page
+       x="0"
+       y="0"
+       inkscape:label="1"
+       id="page1"
+       width="682.66669"
+       height="550.79999"
+       margin="0"
+       bleed="0" />
+  </sodipodi:namedview>
+  <g
+     id="g1"
+     inkscape:groupmode="layer"
+     inkscape:label="1">
+    <g
+       id="group-R5">
+      <path
+         id="path2"
+         d="m 3835,2361 c -163,0 -295,-132 -295,-295 0,-163 132,-295 295,-295 163,0 295,132 295,295 0,163 -132,295 -295,295 z M 2047,3713 c 248,-28 480,-78 664,-154 251,-104 426,-253 467,-320 l 55,-92 h 111 c 983,0 1336,-930 1365,-1008 -14,-72 -71,-347 -270,-658 C 4210,1126 3840,788 3147,788 h -74 l -55,-49 c 0,0 -104,-88 -246,-178 -75,-47 -138,-55 -215,-86 8,90 0,221 0,221 l 43,172 -160,55 c -487,186 -901,536 -1113,781 l -135,160 -147,-148 c 0,0 -262.004,-184 -602.004,-270 51.004,230 129.008,436 129.008,436 l 42.996,86 -42.996,86 c 0,0 -85,226 -135,467 C 800,2441 1045,2220 1045,2220 l 148,-148 135,160 c 176,199 650,695 1346,787 l -55,387 c -188,-25 -353,-79 -510,-141 -11,165 -19,307 -62,448 z m -572,418 111,-270 c 69,-168 163,-589 141,-787 -268,-165 -433,-327 -559,-461 -155,125 -462,338 -970.996,338 H 0 V 2754 C 0,2378 136,2072 184,1967 135,1864 0,1569 0,1181 V 984 H 197.004 C 702.996,984 1013,1198 1168,1322 1401,1082 1733,830 2151,640 2133,518 2118,347 2169,148 L 2206,0 h 154 c 243,0 452,121 621,227 138,88 205,149 240,178 782,28 1282,449 1549,867 277,431 344,861 344,861 l 6,49 -18,49 c 0,0 -450,1237 -1672,1297 -130,158 -311,288 -565,393 -300,124 -678,209 -1094,209 h -296 v 1"
+         style="fill:#100f0d;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         transform="matrix(0.13333333,0,0,-0.13333333,0,550.8)" />
+    </g>
+  </g>
+</svg>

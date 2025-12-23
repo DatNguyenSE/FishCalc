@@ -2,7 +2,8 @@ using System;
 using FishCalc.Web.DTOs;
 using FishCalc.Web.Entities;
 
-namespace FishCalc.Web.Extensions;
+namespace FishCalc.Web.My.Extensions;
+
 
 public static class SalaryProcessMappingExtension
 {
@@ -16,9 +17,12 @@ public static class SalaryProcessMappingExtension
             UnitId= entity.ProcessingUnitId,
             UnitName = entity.ProcessingUnit?.UnitName,
             FishTypeName = entity.FishType?.Name,
+            PricePerUnit = entity.PricePerUnit,
             SalaryPayment = entity.SalaryPayment,
             TotalQuantityProcessed= entity.TotalQuantityProcessed,
-            Notes= entity.Notes
+            Notes= entity.Notes,
+            Status = entity.Status
+            
         };
     }
     
@@ -34,7 +38,9 @@ public static class SalaryProcessMappingExtension
             ProcessingUnitId= dto.UnitId,
             TotalQuantityProcessed= dto.TotalQuantityProcessed,
             SalaryPayment= dto.SalaryPayment,
-            Notes= dto.Notes
+            PricePerUnit= dto.PricePerUnit,
+            Notes= dto.Notes,
+            Status = dto.Status
         };
     }
 }

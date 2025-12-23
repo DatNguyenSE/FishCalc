@@ -1,4 +1,5 @@
 using FishCalc.Web.DTOs;
+using FishCalc.Web.Helpers.Enums;
 using FishCalc.Web.Interfaces.IServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -10,52 +11,59 @@ namespace FishCalc.Web.Pages.Features
         [BindProperty(SupportsGet = true)]
         public DateTime SearchDate { get; set; } = DateTime.Today;
 
-        // Dữ liệu hiển thị ra HTML
         public List<ReceiptGroupViewModel> ReceiptData { get; set; } = new();
 
         public decimal GrandTotalMoney { get; set; }
         public decimal GrandTotalWeight { get; set; }
+        public string DailyNote { get; set; } = string.Empty;
+        public SalaryStatus Status { get; set; }
+
 
         public async Task OnGetAsync()
         {
             var queryDate = DateOnly.FromDateTime(SearchDate);
 
-            // 1. Lấy dữ liệu thô từ Service
-            var rawData = await _salaryService.GetProcessesListByDateAsync(queryDate);
+            //  Lấy dữ liệu thô từ Service
+            var rawData = await _salaryService.GetSalaryProcessesListByDateAsync(queryDate);
 
             if (rawData == null || !rawData.Any()) return;
 
-            // 2. Nhóm dữ liệu theo UnitId
-            var groupedData = rawData.GroupBy(x => x.UnitId);
+            // Nhóm dữ liệu theo UnitId (Theo tổ) có value là danh sách các dòng cá trong tổ đó
+            var unitGroupData = rawData.GroupBy(x => x.UnitId);
 
-            // 3. Duyệt qua từng nhóm để tạo ViewModel
-            foreach (var group in groupedData)
+            //  Duyệt qua từng nhóm để tạo ViewModel
+            foreach (var unit in unitGroupData)
             {
+                
                 // Lấy tên tổ từ phần tử đầu tiên trong nhóm
                 // Lưu ý: Dùng null coalescing (??) đề phòng tên null
-                var firstItem = group.First();
-                var unitName = firstItem.UnitName ?? $"Tổ #{firstItem.UnitId}";
+                var firstItem = unit.First();
+                DailyNote = firstItem.Notes ?? string.Empty;
+                Status = firstItem.Status;;
 
-                var groupVm = new ReceiptGroupViewModel
+                var unitName = firstItem.UnitName ?? $"Tổ #{firstItem.UnitId}";
+                
+                var groupDisplay = new ReceiptGroupViewModel
                 {
                     UnitName = unitName,
                     Items = new List<ReceiptItemViewModel>()
                 };
 
                 // Duyệt qua từng dòng cá trong tổ này
-                foreach (var item in group)
+                foreach (var item in unit)
                 {
-                    groupVm.Items.Add(new ReceiptItemViewModel
+                    groupDisplay.Items.Add(new ReceiptItemViewModel
                     {
-                        FishName = item.FishTypeName ?? "Cá không tên",
+                        FishName = item.FishTypeName ,
                         Quantity = item.TotalQuantityProcessed,
+                        PricePerUnit = item.PricePerUnit,
                         TotalPrice = item.SalaryPayment,
-                        Notes = item.Notes
-                        // PricePerKg sẽ tự động được tính trong class ViewModel
+                        Notes = item.Notes,
+                        
                     });
                 }
 
-                ReceiptData.Add(groupVm);
+                ReceiptData.Add(groupDisplay);
             }
 
             // 4. Tính tổng toàn cục (Grand Total)
