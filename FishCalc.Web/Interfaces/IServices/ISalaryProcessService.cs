@@ -13,5 +13,6 @@ public interface ISalaryProcessService
     Task UpdateSalaryProcessAsync(SalaryProcessDto dto);
     Task DeleteSalaryProcessAsync(int id);
     Task CreateSalaryProcessesByList(List<SalaryProcessDto> dtos);
-    
+    Task<ReceiptListDto> GetListSalaryProcessesByDatesAsync(DateOnly startDate, DateOnly endDate);
+
 }

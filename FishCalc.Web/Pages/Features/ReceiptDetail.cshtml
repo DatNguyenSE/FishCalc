@@ -1,10 +1,11 @@
 ﻿@page
-@model FishCalc.Web.Pages.Features.ReceiptModel
+@model FishCalc.Web.Pages.Features.ReceiptDetailModel
 @using FishCalc.Web.Helpers.Enums
 
 @{
 ViewData["Title"] = "Báo cáo sản lượng";
 var cultureInfo = new System.Globalization.CultureInfo("vi-VN");
+
 }
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -52,7 +53,7 @@ var cultureInfo = new System.Globalization.CultureInfo("vi-VN");
     @statusText
 </span>
 
-                    <h2 class="mt-2 text-3xl font-bold text-slate-900 uppercase tracking-tight">Bảng Kê Lương</h2>
+                    <h2 class="mt-2 text-3xl font-bold text-slate-900 uppercase tracking-tight">Bảng Thống Kê Lương</h2>
                     <p class="text-slate-500 mt-1">Ngày tính lương: <span
                             class="font-semibold text-slate-900">@Model.SearchDate.ToString("dd/MM/yyyy")</span></p>
                 </div>

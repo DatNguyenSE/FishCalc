@@ -57,4 +57,12 @@ public class SalaryProcessingRepository(AppDbContext _context) : ISalaryProcessR
         _context.Entry(salaryProcess).State = EntityState.Modified;
         return _context.SaveChangesAsync();
     }
+
+    public async Task<IReadOnlyList<SalaryProcess>> GetListSalaryProcessesByDatesAsync(DateOnly startDate, DateOnly endDate)
+    {
+        return await _context.SalaryProcesses
+            .Include(sp => sp.ProcessingUnit) // Include bảng Tổ để lấy tên
+            .Where(sp => sp.Date >= startDate && sp.Date <= endDate)
+            .ToListAsync();
+    }
 }

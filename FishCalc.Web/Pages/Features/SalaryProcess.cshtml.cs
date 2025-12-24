@@ -103,7 +103,7 @@ public class SalaryProcessModel(
         TempData.Keep("SelectedFishIds");
         TempData.Keep("SelectedUnitIds");
 
-        // 🔑 QUAN TRỌNG: load lại metadata trước khi return Page()
+        //  QUAN TRỌNG: load lại metadata trước khi return Page()
         await LoadMetadataAsync();
 
         /* ===== CHECK TRÙNG NGÀY ===== */
@@ -118,7 +118,7 @@ public class SalaryProcessModel(
                 $"Ngày {ProcessDate:dd/MM/yyyy} đã được tính lương. Vui lòng chọn ngày khác."
             );
 
-            return Page(); // ✅ KHÔNG MẤT DATA
+            return Page();
         }
 
         /* ===== XỬ LÝ LƯU ===== */
@@ -169,6 +169,6 @@ public class SalaryProcessModel(
         }
 
         await _salaryService.CreateSalaryProcessesByList(salaryList);
-        return RedirectToPage("/Features/Receipt");
+        return RedirectToPage("/Features/ReceiptDetail");
     }
 }

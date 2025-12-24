@@ -11,5 +11,5 @@ public interface ISalaryProcessRepository
     Task<IReadOnlyList<SalaryProcess>> GetSalaryProcessesAsync();
     Task UpdateSalaryProcessAsync(SalaryProcess salaryProcess);
     Task CreateSalaryProcessesByList(List<SalaryProcess> salaryProcesses);
-
+    Task<IReadOnlyList<SalaryProcess>> GetListSalaryProcessesByDatesAsync(DateOnly startDate, DateOnly endDate);
 }

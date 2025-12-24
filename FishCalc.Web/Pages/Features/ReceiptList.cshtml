@@ -1,0 +1,160 @@
+﻿@page
+@model FishCalc.Web.Pages.Features.ReceiptListModel
+@{
+    ViewData["Title"] = "Bảng kê lương chi tiết";
+
+    var queryStartDate = Request.Query["startDate"];
+    var queryEndDate = Request.Query["endDate"];
+
+    string today = DateTime.Today.ToString("yyyy-MM-dd");
+    string last7 = DateTime.Today.AddDays(-6).ToString("yyyy-MM-dd");
+    string last10 = DateTime.Today.AddDays(-9).ToString("yyyy-MM-dd");
+    string last30 = DateTime.Today.AddDays(-29).ToString("yyyy-MM-dd");
+    string monthStart = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).ToString("yyyy-MM-dd");
+}
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+
+    <!-- HEADER -->
+    <div class="bg-white rounded-xl shadow-sm p-6">
+        <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900">
+                    📊 Bảng Thống Kê Lương 
+                </h2>
+                <p class="mt-1 text-sm text-gray-500">
+                    Tổng hợp tiền lương theo từng tổ và từng ngày
+                </p>
+            </div>
+
+            <!-- QUICK FILTER -->
+            <div class="flex flex-wrap gap-2">
+                <a href="?startDate=@last7&endDate=@today"
+                   class="px-3 py-1.5 rounded-full text-sm font-medium bg-gray-100 hover:bg-indigo-100 hover:text-indigo-700 transition">
+                    7 ngày
+                </a>
+                <a href="?startDate=@last10&endDate=@today"
+                   class="px-3 py-1.5 rounded-full text-sm font-medium bg-gray-100 hover:bg-indigo-100 hover:text-indigo-700 transition">
+                    10 ngày
+                </a>
+                <a href="?startDate=@last30&endDate=@today"
+                   class="px-3 py-1.5 rounded-full text-sm font-medium bg-gray-100 hover:bg-indigo-100 hover:text-indigo-700 transition">
+                    1 tháng
+                </a>
+                <a href="?startDate=@monthStart&endDate=@today"
+                   class="px-3 py-1.5 rounded-full text-sm font-medium bg-indigo-600 text-white hover:bg-indigo-500 transition">
+                    Tháng này
+                </a>
+            </div>
+        </div>
+
+        <!-- DATE FILTER -->
+        <form method="get" class="mt-4 flex flex-wrap gap-4 items-end">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Từ ngày</label>
+                <input type="date" name="startDate" value="@queryStartDate"
+                       class="mt-1 rounded-lg border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 p-2">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Đến ngày</label>
+                <input type="date" name="endDate" value="@queryEndDate"
+                       class="mt-1 rounded-lg border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 p-2">
+            </div>
+            <button type="submit"
+                    class="h-10 px-4 rounded-lg bg-indigo-600 text-white font-semibold shadow hover:bg-indigo-500">
+                Lọc dữ liệu
+            </button>
+        </form>
+    </div>
+
+    @if (Model.MatrixData != null && Model.MatrixData.Rows.Any())
+    {
+        <!-- TABLE -->
+        <div class="bg-white rounded-xl shadow overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="min-w-full table-fixed border-collapse">
+                    <thead class="bg-slate-100">
+                        <tr>
+                            <th class="sticky left-0 z-20 bg-slate-100 px-4 py-3 text-left text-sm font-bold text-slate-700 border-r w-48">
+                                TỔ \ NGÀY
+                            </th>
+
+                            @foreach (var date in Model.MatrixData.Headers)
+                            {
+                                <th class="px-3 py-3 text-center text-sm font-semibold text-slate-700 min-w-[110px] border-r">
+                                    @date.ToString("dd/MM")
+                                </th>
+                            }
+
+                            <th class="px-3 py-3 text-right text-sm font-bold text-indigo-700 bg-slate-200 min-w-[130px]">
+                                Tổng
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="divide-y">
+                        @foreach (var unit in Model.MatrixData.Rows)
+                        {
+                            decimal rowTotal = 0;
+                            <tr class="hover:bg-slate-50 transition">
+                                <td class="sticky left-0 z-10 bg-white px-4 py-3 font-medium text-slate-700 border-r">
+                                    @unit.UnitName
+                                </td>
+
+                                @foreach (var date in Model.MatrixData.Headers)
+                                {
+                                    var key = (UnitId: unit.UnitId, Date: date);
+                                    var amount = Model.MatrixData.Data.GetValueOrDefault(key, 0);
+                                    rowTotal += amount;
+
+                                    <td class="px-3 py-3 text-right text-sm border-r">
+                                        @if (amount > 0)
+                                        {
+                                            <span class="font-medium text-slate-700">
+                                                @amount.ToString("#,##0")
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-gray-300">–</span>
+                                        }
+                                    </td>
+                                }
+
+                                <td class="px-3 py-3 text-right font-bold text-indigo-600 bg-indigo-50">
+                                    @rowTotal.ToString("#,##0")
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+
+                    <tfoot class="bg-slate-200">
+                        <tr>
+                            <td class="sticky left-0 z-10 px-4 py-3 font-bold text-slate-800 bg-slate-200 border-r">
+                                Tổng theo ngày
+                            </td>
+
+                            @foreach (var date in Model.MatrixData.Headers)
+                            {
+                                var colTotal = Model.MatrixData.ColumnTotals.GetValueOrDefault(date, 0);
+                                <td class="px-3 py-3 text-right font-bold text-emerald-700 border-r">
+                                    @colTotal.ToString("#,##0")
+                                </td>
+                            }
+
+                            <td class="px-3 py-3 text-right font-bold text-white bg-indigo-700">
+                                @Model.MatrixData.ColumnTotals.Sum(x => x.Value).ToString("#,##0")
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="bg-white rounded-xl shadow p-12 text-center">
+            <p class="text-gray-500">Không có dữ liệu trong khoảng thời gian đã chọn</p>
+        </div>
+    }
+</div>

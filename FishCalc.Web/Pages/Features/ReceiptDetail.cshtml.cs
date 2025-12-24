@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FishCalc.Web.Pages.Features
 {
-    public class ReceiptModel(ISalaryProcessService _salaryService) : PageModel
+    public class ReceiptDetailModel(ISalaryProcessService _salaryService) : PageModel
     {
         [BindProperty(SupportsGet = true)]
         public DateTime SearchDate { get; set; } = DateTime.Today;
