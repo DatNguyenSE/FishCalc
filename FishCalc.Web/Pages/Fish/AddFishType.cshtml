@@ -1,18 +1,38 @@
 ﻿@page
-@model FishCalc.Web.Pages.Fish.UpdateFishTypeModel
+@model FishCalc.Web.Pages.Fish.AddFishTypeModel
 @{
-    ViewData["Title"] = "Cập nhật loại cá";
+    ViewData["Title"] = "Thêm mới loại cá";
 }
 
 <div class="max-w-4xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
     <div class="mb-8 text-center sm:text-left">
-        <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Cập nhật loại cá</h2>
-        <p class="mt-2 text-lg text-slate-600">Chỉnh sửa thông tin và hình ảnh minh họa cho loại cá.</p>
+        <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Thêm loại cá</h2>
+        <p class="mt-2 text-lg text-slate-600">Thêm thông tin và hình ảnh minh họa cho loại cá.</p>
     </div>
+
+    <!-- Hiển thị lỗi tổng quan nếu có -->
+    @if (!ModelState.IsValid)
+    {
+        <div class="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <h3 class="text-sm font-medium text-red-800">Có lỗi xảy ra khi gửi form:</h3>
+                    <div class="mt-2 text-sm text-red-700">
+                        <div asp-validation-summary="All" class="list-disc pl-5 space-y-1"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
 
     <div class="bg-white shadow-xl rounded-2xl overflow-hidden border border-slate-100">
         <form method="post" enctype="multipart/form-data" class="p-8">
-            <input type="hidden" asp-for="FishType.Id" />
+            <!-- QUAN TRỌNG: Bỏ thẻ input hidden ID vì tạo mới không cần gửi ID -->
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 
@@ -21,11 +41,9 @@
                     
                     <div class="relative w-full aspect-square bg-slate-50 border-2 border-dashed border-slate-300 rounded-xl flex items-center justify-center overflow-hidden hover:bg-slate-100 transition-colors group cursor-pointer">
                         <img id="imagePreview" 
-                             src="@(string.IsNullOrEmpty(Model.FishType.ImgFishUrl) ? "/images/default-fish.png" : Model.FishType.ImgFishUrl)" 
-                             alt="Fish Preview" 
-                             class="absolute inset-0 w-full h-full object-cover @(string.IsNullOrEmpty(Model.FishType.ImgFishUrl) ? "hidden" : "")" />
+                             class="absolute inset-0 w-full h-full object-cover hidden" />
                         
-                        <div id="uploadPlaceholder" class="flex flex-col items-center justify-center p-4 text-slate-400 @(!string.IsNullOrEmpty(Model.FishType.ImgFishUrl) ? "hidden" : "")">
+                        <div id="uploadPlaceholder" class="flex flex-col items-center justify-center p-4 text-slate-400 ">
                             <svg class="w-10 h-10 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                             <span class="text-xs text-center">Nhấn để tải ảnh lên</span>
                         </div>
@@ -33,32 +51,34 @@
                         <input asp-for="ImageUpload" type="file" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="previewImage(this)"/>
                     </div>
                     <p class="text-xs text-slate-500 mt-2 text-center">PNG, JPG, GIF tối đa 5MB</p>
+                    <span asp-validation-for="ImageUpload" class="text-xs text-red-500 mt-1 block text-center"></span>
                 </div>
 
                 <div class="md:col-span-2 space-y-6">
                     
                     <div>
-                        <label asp-for="FishType.Name" class="block text-sm font-semibold text-slate-700 mb-1">Tên loại cá</label>
-                        <input asp-for="FishType.Name" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none" placeholder="Ví dụ: Cá Hồi Na Uy" />
-                        <span asp-validation-for="FishType.Name" class="text-red-500 text-sm mt-1 block"></span>
+                        <label asp-for="FishType.Name" class="block text-sm font-semibold text-slate-700 mb-1">Tên loại cá <span class="text-red-500">*</span></label>
+                        <input asp-for="FishType.Name" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none" placeholder="Ví dụ: Cá Hồi" />
+                        <!-- Thêm thẻ hiển thị lỗi -->
+                        <span asp-validation-for="FishType.Name" class="text-sm text-red-500 mt-1"></span>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <div>
                             <label asp-for="FishType.UnitOfMeasure" class="block text-sm font-semibold text-slate-700 mb-1">Đơn vị tính</label>
-                            <input asp-for="FishType.UnitOfMeasure" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none" placeholder="kg, con..." />
-                            <span asp-validation-for="FishType.UnitOfMeasure" class="text-red-500 text-sm mt-1 block"></span>
+                            <input asp-for="FishType.UnitOfMeasure" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none" value="Kilogram" />
+                            <span asp-validation-for="FishType.UnitOfMeasure" class="text-sm text-red-500 mt-1"></span>
                         </div>
 
                         <div>
-                            <label asp-for="FishType.PricePerUnit" class="block text-sm font-semibold text-slate-700 mb-1">Giá hiện tại (VNĐ)</label>
+                            <label asp-for="FishType.PricePerUnit" class="block text-sm font-semibold text-slate-700 mb-1">Giá hiện tại (VNĐ) <span class="text-red-500">*</span></label>
                             <div class="relative">
-                                <input asp-for="FishType.PricePerUnit" type="number" step="1" class="w-full pl-4 pr-12 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none" />
+                                <input asp-for="FishType.PricePerUnit" type="number" step="1" class="w-full pl-4 pr-12 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none" placeholder="0" />
                                 <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                                    <span class="text-slate-500 sm:text-sm">nghìn</span>
+                                    <span class="text-slate-500 sm:text-sm">VNĐ</span>
                                 </div>
                             </div>
-                            <span asp-validation-for="FishType.PricePerUnit" class="text-red-500 text-sm mt-1 block"></span>
+                            <span asp-validation-for="FishType.PricePerUnit" class="text-sm text-red-500 mt-1"></span>
                         </div>
                     </div>
 
@@ -68,7 +88,7 @@
                         </a>
                         <button type="submit" class="px-5 py-2.5 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 shadow-sm transition-colors flex items-center">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                            Lưu thay đổi
+                            Thêm mới
                         </button>
                     </div>
                 </div>
@@ -81,7 +101,6 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     
     <script>
-        // Script hiển thị ảnh ngay khi chọn (Preview)
         function previewImage(input) {
             const preview = document.getElementById('imagePreview');
             const placeholder = document.getElementById('uploadPlaceholder');

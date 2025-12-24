@@ -9,7 +9,7 @@
 </div>
 <div class="flex justify-between items-center mb-6">
     <h1 class="text-2xl font-bold text-slate-800">Danh sách Loại Cá</h1>
-    <a asp-page="./Create" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition shadow-sm">
+    <a asp-page="/Fish/AddFishType" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition shadow-sm">
         + Thêm mới
     </a>
 </div>
@@ -34,7 +34,7 @@
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">@(item.PricePerUnit)</td>
                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <a asp-page="/Fish/UpdateFishType" asp-route-id="@item.Id" class="text-indigo-600 hover:text-indigo-900 mr-3">Sửa</a>
-                        <a href="/Fish" class="text-red-600 hover:text-red-900">Xóa</a>
+                        <a asp-page="/Fish/DeleteFishType"  asp-route-id="@item.Id"  class="text-red-600 hover:text-red-900">Xóa</a>
                     </td>
                 </tr>
             }

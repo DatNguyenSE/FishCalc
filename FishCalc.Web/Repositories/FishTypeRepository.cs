@@ -14,7 +14,7 @@ public class FishTypeRepository(AppDbContext _context) : IFishTypeRepository
         var initPrice = new FishPrice
         {
             UnitOfMeasure = "Kilogram",
-            PricePerUnit = 0,
+            PricePerUnit = fish.FishPrices.FirstOrDefault()?.PricePerUnit ?? 0,
             EffectiveDate = DateTime.Now,
             FishTypeId = fish.Id
         };
